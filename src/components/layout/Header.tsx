@@ -22,7 +22,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-2">
           <ChefHat className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-serif font-bold gradient-text">FlavorQuest</span>
+          <span className="text-2xl font-serif font-bold gradient-text">Rasoi Khoj</span>
         </Link>
 
         {/* Desktop Navigation */}

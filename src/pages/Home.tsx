@@ -46,11 +46,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>
         <div className="relative container mx-auto text-center text-primary-foreground">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 fade-in">
-            Discover Amazing
-            <span className="block text-accent-glow">Recipes</span>
+            Discover Authentic
+            <span className="block text-accent-glow">Indian Recipes</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto fade-in opacity-90">
-            Explore culinary delights from around the world and find your next favorite dish
+            From Kashmir to Kerala, explore traditional recipes from every Indian state
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in">
             <Button asChild size="lg" className="btn-accent">

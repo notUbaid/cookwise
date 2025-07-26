@@ -5,7 +5,7 @@ type Theme = 'dark' | 'light';
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('flavorquest-theme') as Theme) || 'light';
+      return (localStorage.getItem('rasoi-khoj-theme') as Theme) || 'light';
     }
     return 'light';
   });
@@ -14,7 +14,7 @@ export function useTheme() {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    localStorage.setItem('flavorquest-theme', theme);
+    localStorage.setItem('rasoi-khoj-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

@@ -80,9 +80,11 @@ export function RecipeCard({ recipe, onSave, isSaved = false }: RecipeCardProps)
           </h3>
         </div>
         
-        <Badge variant="secondary" className="badge-cuisine mb-3">
-          {recipe.cuisine}
-        </Badge>
+        <div className="flex items-center justify-between mb-2">
+          <Badge variant="secondary" className="badge-cuisine">
+            {recipe.cuisine} • {recipe.state}
+          </Badge>
+        </div>
         
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
           <div className="flex items-center space-x-1">

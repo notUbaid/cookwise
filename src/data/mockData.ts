@@ -2,6 +2,8 @@ export interface Recipe {
   id: string;
   title: string;
   cuisine: string;
+  state: string;
+  city?: string;
   image: string;
   cookingTime: number;
   spiceLevel: 'Mild' | 'Medium' | 'Hot';
@@ -24,278 +26,438 @@ export interface Recipe {
 export const mockRecipes: Recipe[] = [
   {
     id: '1',
-    title: 'Spicy Thai Green Curry',
-    cuisine: 'Thai',
-    image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=500',
-    cookingTime: 35,
-    spiceLevel: 'Hot',
-    effort: 'Medium',
-    mealType: 'Dinner',
-    dietType: ['Veg', 'Vegan', 'Gluten-Free'],
+    title: 'Hyderabadi Biryani',
+    cuisine: 'Hyderabadi',
+    state: 'Telangana',
+    city: 'Hyderabad',
+    image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
+    cookingTime: 90,
+    spiceLevel: 'Medium',
+    effort: 'Hard',
+    mealType: 'Lunch',
+    dietType: ['Non-Veg', 'Gluten-Free'],
     ingredients: [
-      '2 cups coconut milk',
-      '2 tbsp green curry paste',
-      '1 cup mixed vegetables',
-      '2 tbsp fish sauce',
-      'Fresh basil leaves',
-      'Jasmine rice'
+      '1 kg Basmati rice',
+      '750g Mutton pieces',
+      '4 tbsp Ghee',
+      '2 cups Fried onions',
+      '1 cup Yogurt',
+      'Biryani masala powder',
+      'Saffron soaked in milk',
+      'Fresh mint leaves',
+      'Coriander leaves'
     ],
     steps: [
-      'Heat coconut milk in a large pan over medium heat',
-      'Add green curry paste and stir until fragrant',
-      'Add vegetables and cook for 10 minutes',
-      'Season with fish sauce and simmer for 15 minutes',
-      'Garnish with fresh basil and serve with jasmine rice'
+      'Marinate mutton with yogurt, spices, and half the fried onions for 2 hours',
+      'Cook rice with whole spices until 70% done, drain and set aside',
+      'In a heavy-bottomed pot, layer the marinated mutton at the bottom',
+      'Layer the partially cooked rice over the mutton',
+      'Sprinkle remaining fried onions, mint, coriander, and saffron milk',
+      'Cover with aluminum foil, then place the lid and cook on dum for 45 minutes',
+      'Let it rest for 10 minutes before opening and gently mix',
+      'Serve hot with raita, shorba, and boiled eggs'
     ],
-    calories: 320,
-    macros: { protein: 12, carbs: 25, fat: 18 },
-    culturalFact: 'Green curry is considered the spiciest of all Thai curries and originated in central Thailand during the early 1900s.',
+    calories: 520,
+    macros: { protein: 28, carbs: 65, fat: 18 },
+    culturalFact: 'Hyderabadi Biryani originated in the kitchens of the Nizams of Hyderabad and is cooked using the ancient dum method where the pot is sealed and slow-cooked.',
     substitutions: {
-      'fish sauce': 'soy sauce for vegan option',
-      'coconut milk': 'cashew cream for lighter version'
+      'mutton': 'chicken or paneer for different variations',
+      'ghee': 'refined oil for lighter version'
     },
     isOfflineAvailable: true
   },
   {
     id: '2',
-    title: 'Authentic Italian Margherita Pizza',
-    cuisine: 'Italian',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500',
-    cookingTime: 20,
+    title: 'Masala Dosa',
+    cuisine: 'South Indian',
+    state: 'Karnataka',
+    city: 'Bangalore',
+    image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500',
+    cookingTime: 30,
     spiceLevel: 'Mild',
-    effort: 'Easy',
-    mealType: 'Dinner',
-    dietType: ['Veg'],
+    effort: 'Medium',
+    mealType: 'Breakfast',
+    dietType: ['Veg', 'Vegan', 'Gluten-Free'],
     ingredients: [
-      'Pizza dough',
-      '1/2 cup tomato sauce',
-      '8 oz fresh mozzarella',
-      'Fresh basil leaves',
-      '2 tbsp olive oil',
-      'Salt and pepper'
+      'Dosa batter (fermented)',
+      '4 medium Potatoes',
+      '2 tbsp Oil',
+      '1 tsp Mustard seeds',
+      '1 tsp Cumin seeds',
+      'Curry leaves',
+      '2 Green chilies',
+      '1 inch Ginger',
+      'Turmeric powder',
+      'Salt to taste'
     ],
     steps: [
-      'Preheat oven to 475°F (245°C)',
-      'Roll out pizza dough on floured surface',
-      'Spread tomato sauce evenly over dough',
-      'Add torn mozzarella pieces',
-      'Bake for 12-15 minutes until crust is golden',
-      'Top with fresh basil and drizzle with olive oil'
+      'Boil and mash potatoes, keeping them slightly chunky',
+      'Heat oil in pan, add mustard seeds and cumin seeds',
+      'Add curry leaves, green chilies, and ginger',
+      'Add turmeric and mashed potatoes, mix well and cook for 5 minutes',
+      'Heat dosa pan and spread batter in circular motion',
+      'Drizzle oil around edges and cook until golden',
+      'Place potato filling on one side and fold the dosa',
+      'Serve immediately with coconut chutney and sambar'
     ],
-    calories: 420,
-    macros: { protein: 18, carbs: 45, fat: 16 },
-    culturalFact: 'Margherita pizza was created in 1889 to honor Queen Margherita of Savoy, with colors representing the Italian flag.',
+    calories: 280,
+    macros: { protein: 8, carbs: 48, fat: 8 },
+    culturalFact: 'Masala Dosa was invented in the Udupi restaurants of Mumbai and has become one of the most popular South Indian breakfast items worldwide.',
     substitutions: {
-      'mozzarella': 'vegan cheese for dairy-free option',
-      'pizza dough': 'cauliflower crust for low-carb'
+      'potato filling': 'paneer or mixed vegetables',
+      'regular dosa': 'rava dosa for crispier texture'
     },
     isOfflineAvailable: true
   },
   {
     id: '3',
-    title: 'Classic Indian Butter Chicken',
-    cuisine: 'Indian',
-    image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=500',
-    cookingTime: 45,
+    title: 'Rajasthani Dal Baati Churma',
+    cuisine: 'Rajasthani',
+    state: 'Rajasthan',
+    city: 'Jaipur',
+    image: 'https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=500',
+    cookingTime: 75,
     spiceLevel: 'Medium',
-    effort: 'Medium',
-    mealType: 'Dinner',
-    dietType: ['Non-Veg', 'Gluten-Free'],
-    ingredients: [
-      '1 lb chicken breast',
-      '1 cup heavy cream',
-      '3 tbsp butter',
-      '2 tbsp tomato paste',
-      '1 tsp garam masala',
-      'Basmati rice',
-      'Fresh cilantro'
-    ],
-    steps: [
-      'Marinate chicken pieces with yogurt and spices for 30 minutes',
-      'Cook chicken in butter until golden brown',
-      'Add tomato paste and spices, cook for 2 minutes',
-      'Pour in cream and simmer for 20 minutes',
-      'Garnish with cilantro and serve with basmati rice'
-    ],
-    calories: 385,
-    macros: { protein: 32, carbs: 8, fat: 24 },
-    culturalFact: 'Butter chicken was invented in the 1950s at Moti Mahal restaurant in Delhi by accident when leftover tandoori chicken was mixed with tomato gravy.',
-    substitutions: {
-      'heavy cream': 'coconut cream for dairy-free',
-      'chicken': 'paneer or tofu for vegetarian'
-    },
-    isOfflineAvailable: false
-  },
-  {
-    id: '4',
-    title: 'Mexican Street Tacos',
-    cuisine: 'Mexican',
-    image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500',
-    cookingTime: 15,
-    spiceLevel: 'Medium',
-    effort: 'Easy',
+    effort: 'Hard',
     mealType: 'Lunch',
-    dietType: ['Non-Veg', 'Gluten-Free'],
+    dietType: ['Veg', 'Gluten-Free'],
     ingredients: [
-      'Corn tortillas',
-      '1 lb carnitas',
-      'White onion, diced',
-      'Fresh cilantro',
-      'Lime wedges',
-      'Salsa verde'
+      '2 cups Wheat flour',
+      '1 cup Mixed dal',
+      '1/2 cup Ghee',
+      '1/4 cup Jaggery',
+      'Cardamom powder',
+      'Almonds and raisins',
+      'Hing (asafoetida)',
+      'Red chili powder',
+      'Coriander seeds',
+      'Cumin seeds'
     ],
     steps: [
-      'Warm corn tortillas on a dry skillet',
-      'Fill each tortilla with carnitas',
-      'Top with diced onion and cilantro',
-      'Serve with lime wedges and salsa verde',
-      'Enjoy immediately while warm'
+      'Make stiff dough with wheat flour, ghee, and water for baati',
+      'Shape into round balls and bake in oven at 180°C for 45 minutes',
+      'Boil mixed dal with spices until soft and mushy',
+      'Prepare tempering with cumin, mustard seeds, and hing',
+      'Add tempering to dal and simmer for 10 minutes',
+      'For churma, coarse grind baked baati with ghee and jaggery',
+      'Add cardamom powder and dry fruits to churma',
+      'Serve hot baati with dal and churma on the side'
     ],
-    calories: 280,
-    macros: { protein: 22, carbs: 18, fat: 14 },
-    culturalFact: 'Street tacos originated from Mexican workers who needed quick, portable meals during the day.',
+    calories: 450,
+    macros: { protein: 15, carbs: 58, fat: 20 },
+    culturalFact: 'Dal Baati Churma is the signature dish of Rajasthan, traditionally prepared by rajasthani women and symbolizes the royal cuisine of the desert state.',
     substitutions: {
-      'carnitas': 'grilled vegetables for vegetarian',
-      'corn tortillas': 'flour tortillas if preferred'
+      'wheat flour': 'bajra flour for traditional variation',
+      'jaggery': 'sugar for sweeter churma'
     },
     isOfflineAvailable: true
   },
   {
-    id: '5',
-    title: 'Japanese Chicken Ramen',
-    cuisine: 'Japanese',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500',
-    cookingTime: 60,
-    spiceLevel: 'Mild',
-    effort: 'Hard',
-    mealType: 'Dinner',
-    dietType: ['Non-Veg'],
+    id: '4',
+    title: 'Bengali Fish Curry',
+    cuisine: 'Bengali',
+    state: 'West Bengal',
+    city: 'Kolkata',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500',
+    cookingTime: 40,
+    spiceLevel: 'Medium',
+    effort: 'Medium',
+    mealType: 'Lunch',
+    dietType: ['Non-Veg', 'Gluten-Free'],
     ingredients: [
-      'Ramen noodles',
-      'Chicken stock',
-      'Soy sauce',
-      'Miso paste',
-      'Soft-boiled eggs',
-      'Green onions',
-      'Nori sheets'
+      '500g Rohu fish pieces',
+      '2 Potatoes cut in wedges',
+      '3 tbsp Mustard oil',
+      '1 tsp Panch phoron',
+      '2 Bay leaves',
+      '2 tbsp Ginger-garlic paste',
+      '1 tsp Turmeric powder',
+      '2 tsp Red chili powder',
+      '2 Tomatoes chopped',
+      'Fresh coriander'
     ],
     steps: [
-      'Prepare rich chicken stock by simmering bones for 4 hours',
-      'Cook ramen noodles according to package instructions',
-      'Mix miso paste with hot stock',
-      'Assemble bowl with noodles, stock, and toppings',
-      'Garnish with green onions and nori'
+      'Marinate fish pieces with turmeric and salt for 15 minutes',
+      'Heat mustard oil in kadai until smoking, then reduce heat',
+      'Fry fish pieces until golden, remove and set aside',
+      'Fry potato wedges until crispy edges, remove and set aside',
+      'Add panch phoron and bay leaves to the oil',
+      'Add ginger-garlic paste and cook until fragrant',
+      'Add tomatoes, turmeric, and chili powder, cook until oil separates',
+      'Add fried fish and potatoes, simmer in gravy for 10 minutes',
+      'Garnish with coriander and serve with steamed rice'
     ],
-    calories: 450,
-    macros: { protein: 25, carbs: 52, fat: 16 },
-    culturalFact: 'Ramen was actually introduced to Japan from China in the early 20th century and has since become a cultural icon.',
+    calories: 320,
+    macros: { protein: 25, carbs: 18, fat: 16 },
+    culturalFact: 'Bengali fish curry reflects the love for fish in Bengal culture. Mustard oil and panch phoron are essential ingredients that give this curry its distinctive flavor.',
     substitutions: {
-      'chicken stock': 'vegetable stock for vegetarian',
-      'soft-boiled eggs': 'marinated tofu for vegan'
+      'rohu fish': 'katla or any fresh water fish',
+      'mustard oil': 'regular oil (though flavor will differ)'
     },
     isOfflineAvailable: false
   },
   {
-    id: '6',
-    title: 'French Chocolate Croissants',
-    cuisine: 'French',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500',
-    cookingTime: 25,
-    spiceLevel: 'Mild',
+    id: '5',
+    title: 'Goan Fish Curry',
+    cuisine: 'Goan',
+    state: 'Goa',
+    city: 'Panaji',
+    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=500',
+    cookingTime: 35,
+    spiceLevel: 'Hot',
     effort: 'Medium',
-    mealType: 'Breakfast',
-    dietType: ['Veg'],
+    mealType: 'Lunch',
+    dietType: ['Non-Veg', 'Gluten-Free'],
     ingredients: [
-      'Puff pastry',
-      'Dark chocolate sticks',
-      '1 egg for wash',
-      'Butter',
-      'Powdered sugar'
+      '500g Kingfish pieces',
+      '400ml Coconut milk',
+      '8-10 Kokum petals',
+      '2 tbsp Coconut oil',
+      '1 Large onion sliced',
+      '3 tbsp Goan fish curry masala',
+      '1 tsp Turmeric powder',
+      '4 Green chilies',
+      'Curry leaves',
+      'Salt to taste'
     ],
     steps: [
-      'Roll out puff pastry and cut into triangles',
-      'Place chocolate stick at wide end of triangle',
-      'Roll pastry around chocolate to form croissant shape',
-      'Brush with egg wash',
-      'Bake at 375°F for 15-20 minutes until golden',
-      'Dust with powdered sugar before serving'
+      'Marinate fish with turmeric and salt for 20 minutes',
+      'Heat coconut oil in clay pot or heavy-bottomed pan',
+      'Add sliced onions and cook until translucent',
+      'Add fish curry masala and cook for 2 minutes',
+      'Add coconut milk and bring to gentle boil',
+      'Add kokum petals and green chilies',
+      'Gently add fish pieces and simmer for 15 minutes',
+      'Add curry leaves and adjust seasoning',
+      'Serve hot with steamed rice or Goan bread'
     ],
-    calories: 320,
-    macros: { protein: 6, carbs: 28, fat: 22 },
-    culturalFact: 'Pain au chocolat was created in the 19th century when Austrian bakers brought croissant techniques to France.',
+    calories: 280,
+    macros: { protein: 24, carbs: 8, fat: 18 },
+    culturalFact: 'Goan fish curry showcases the Portuguese influence on Indian cuisine. Kokum gives it a tangy flavor and coconut milk provides the creamy base typical of coastal cooking.',
     substitutions: {
-      'dark chocolate': 'almond paste for pain aux amandes',
-      'butter': 'vegan butter for plant-based version'
+      'kingfish': 'pomfret or any firm white fish',
+      'kokum': 'tamarind paste for tanginess'
+    },
+    isOfflineAvailable: true
+  },
+  {
+    id: '6',
+    title: 'Punjabi Chole Bhature',
+    cuisine: 'Punjabi',
+    state: 'Punjab',
+    city: 'Amritsar',
+    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500',
+    cookingTime: 60,
+    spiceLevel: 'Medium',
+    effort: 'Medium',
+    mealType: 'Lunch',
+    dietType: ['Veg'],
+    ingredients: [
+      '2 cups Chickpeas (soaked overnight)',
+      '2 cups All-purpose flour',
+      '1/4 cup Yogurt',
+      '2 tbsp Oil',
+      '1 tsp Baking powder',
+      '2 Large onions chopped',
+      '4 Tomatoes chopped',
+      'Chole masala powder',
+      'Garam masala',
+      'Fresh coriander'
+    ],
+    steps: [
+      'Pressure cook soaked chickpeas with salt and tea bags for color',
+      'Make bhature dough with flour, yogurt, oil, and baking powder',
+      'Rest the dough for 30 minutes covered with damp cloth',
+      'Heat oil in pan, add onions and cook until golden',
+      'Add tomatoes and cook until soft and mushy',
+      'Add chole masala, garam masala, and cooked chickpeas',
+      'Simmer for 20 minutes until thick gravy forms',
+      'Roll bhature and deep fry until puffed and golden',
+      'Serve hot chole with fresh bhature and onion salad'
+    ],
+    calories: 420,
+    macros: { protein: 16, carbs: 52, fat: 18 },
+    culturalFact: 'Chole Bhature originated in the streets of Old Delhi and Punjab. The dish represents the hearty, robust flavors of North Indian cuisine.',
+    substitutions: {
+      'all-purpose flour': 'whole wheat flour for healthier bhature',
+      'deep frying': 'shallow fry or bake bhature for lighter version'
     },
     isOfflineAvailable: true
   },
   {
     id: '7',
-    title: 'Greek Mediterranean Salad',
-    cuisine: 'Greek',
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500',
-    cookingTime: 10,
+    title: 'Gujarati Dhokla',
+    cuisine: 'Gujarati',
+    state: 'Gujarat',
+    city: 'Ahmedabad',
+    image: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500',
+    cookingTime: 45,
     spiceLevel: 'Mild',
-    effort: 'Easy',
-    mealType: 'Lunch',
-    dietType: ['Veg', 'Gluten-Free', 'Keto'],
+    effort: 'Medium',
+    mealType: 'Snacks',
+    dietType: ['Veg', 'Vegan', 'Gluten-Free'],
     ingredients: [
-      'Cherry tomatoes',
-      'Cucumber',
-      'Red onion',
-      'Feta cheese',
-      'Kalamata olives',
-      'Olive oil',
-      'Lemon juice',
-      'Oregano'
+      '2 cups Gram flour (besan)',
+      '1 cup Water',
+      '2 tbsp Oil',
+      '1 tsp Ginger-green chili paste',
+      '1/2 tsp Turmeric powder',
+      'Salt to taste',
+      '1 tsp Eno fruit salt',
+      '2 tbsp Lemon juice',
+      'Mustard seeds for tempering',
+      'Curry leaves and coriander'
     ],
     steps: [
-      'Chop tomatoes, cucumber, and red onion',
-      'Combine vegetables in a large bowl',
-      'Add crumbled feta and olives',
-      'Whisk olive oil with lemon juice and oregano',
-      'Drizzle dressing over salad and toss gently'
+      'Mix gram flour with water to make smooth batter',
+      'Add oil, ginger-chili paste, turmeric, and salt',
+      'Whisk the batter until light and fluffy',
+      'Add lemon juice and eno, mix gently and immediately',
+      'Pour into greased steaming plate and steam for 15 minutes',
+      'Check with toothpick, it should come out clean',
+      'Cool completely and cut into squares',
+      'Prepare tempering with mustard seeds and curry leaves',
+      'Pour tempering over dhokla and garnish with coriander',
+      'Serve with green chutney and tamarind chutney'
     ],
-    calories: 180,
-    macros: { protein: 8, carbs: 12, fat: 14 },
-    culturalFact: 'Greek salad (horiatiki) traditionally never includes lettuce and is meant to showcase the quality of local ingredients.',
+    calories: 150,
+    macros: { protein: 6, carbs: 20, fat: 5 },
+    culturalFact: 'Dhokla is Gujarat\'s most famous snack, representing the state\'s preference for steamed, healthy foods. It\'s often eaten as breakfast or evening snack.',
     substitutions: {
-      'feta cheese': 'vegan feta for dairy-free',
-      'olive oil': 'avocado oil for different flavor profile'
+      'eno fruit salt': 'baking soda with lemon juice',
+      'gram flour': 'mix with rice flour for softer texture'
     },
     isOfflineAvailable: false
   },
   {
     id: '8',
-    title: 'Korean Kimchi Fried Rice',
-    cuisine: 'Korean',
-    image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500',
-    cookingTime: 20,
-    spiceLevel: 'Hot',
-    effort: 'Easy',
+    title: 'Kerala Appam with Stew',
+    cuisine: 'Kerala',
+    state: 'Kerala',
+    city: 'Kochi',
+    image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=500',
+    cookingTime: 120,
+    spiceLevel: 'Mild',
+    effort: 'Hard',
     mealType: 'Dinner',
-    dietType: ['Veg', 'Vegan', 'Gluten-Free'],
+    dietType: ['Veg', 'Gluten-Free'],
     ingredients: [
-      'Cooked rice',
-      'Kimchi',
-      'Sesame oil',
-      'Soy sauce',
-      'Green onions',
-      'Fried egg (optional)'
+      '3 cups Raw rice',
+      '1 cup Cooked rice',
+      '1/2 cup Coconut (grated)',
+      '1 tsp Yeast',
+      '2 tbsp Sugar',
+      '400ml Coconut milk',
+      'Mixed vegetables',
+      'Whole spices',
+      'Curry leaves',
+      'Ginger and green chilies'
     ],
     steps: [
-      'Heat sesame oil in a large pan',
-      'Add kimchi and cook for 3 minutes',
-      'Add rice and stir-fry for 10 minutes',
-      'Season with soy sauce',
-      'Garnish with green onions and fried egg'
+      'Soak raw rice for 4 hours, then grind with cooked rice and coconut',
+      'Add yeast and sugar to the batter, ferment overnight',
+      'Before cooking, add coconut milk to get right consistency',
+      'Heat appam pan and pour batter, swirl to spread',
+      'Cover and cook until edges are golden and center is fluffy',
+      'For stew, heat coconut milk with whole spices',
+      'Add vegetables and simmer until tender',
+      'Season with salt and curry leaves',
+      'Serve hot appam with aromatic vegetable stew'
     ],
-    calories: 290,
-    macros: { protein: 8, carbs: 48, fat: 8 },
-    culturalFact: 'Kimchi fried rice was traditionally made to use up leftover rice and aging kimchi, making it a perfect example of Korean home cooking.',
+    calories: 250,
+    macros: { protein: 5, carbs: 45, fat: 8 },
+    culturalFact: 'Appam with stew is a traditional Syrian Christian dish from Kerala, often served during special occasions and reflects the state\'s coastal cuisine.',
     substitutions: {
-      'kimchi': 'sauerkraut for similar fermented flavor',
-      'soy sauce': 'tamari for gluten-free option'
+      'coconut milk': 'regular milk with coconut oil',
+      'vegetables': 'chicken or mutton for non-veg version'
+    },
+    isOfflineAvailable: true
+  },
+  {
+    id: '9',
+    title: 'Maharashtrian Puran Poli',
+    cuisine: 'Maharashtrian',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    image: 'https://images.unsplash.com/photo-1589301163868-90c5f1c2b3d8?w=500',
+    cookingTime: 90,
+    spiceLevel: 'Mild',
+    effort: 'Hard',
+    mealType: 'Dessert',
+    dietType: ['Veg'],
+    ingredients: [
+      '2 cups Wheat flour',
+      '1 cup Chana dal',
+      '1 cup Jaggery',
+      '1/4 cup Ghee',
+      '1/2 tsp Cardamom powder',
+      'Pinch of nutmeg',
+      '2 tbsp Oil',
+      'Salt',
+      'Turmeric powder'
+    ],
+    steps: [
+      'Cook chana dal until very soft and mushy',
+      'Add jaggery to hot dal and cook until thick',
+      'Add cardamom powder and nutmeg, mix well and cool',
+      'Make soft dough with wheat flour, oil, salt, and turmeric',
+      'Rest the dough for 30 minutes covered',
+      'Make small balls of dal mixture (puran)',
+      'Roll out dough, place puran in center and seal',
+      'Gently roll into flat bread without breaking',
+      'Cook on tawa with ghee until golden spots appear',
+      'Serve hot with ghee and milk'
+    ],
+    calories: 320,
+    macros: { protein: 8, carbs: 58, fat: 8 },
+    culturalFact: 'Puran Poli is Maharashtra\'s beloved sweet flatbread, traditionally made during festivals like Gudi Padwa and Holi, symbolizing prosperity and sweetness.',
+    substitutions: {
+      'chana dal': 'toor dal for different flavor',
+      'jaggery': 'sugar for sweeter taste'
+    },
+    isOfflineAvailable: false
+  },
+  {
+    id: '10',
+    title: 'Kashmiri Rogan Josh',
+    cuisine: 'Kashmiri',
+    state: 'Jammu & Kashmir',
+    city: 'Srinagar',
+    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
+    cookingTime: 120,
+    spiceLevel: 'Medium',
+    effort: 'Hard',
+    mealType: 'Dinner',
+    dietType: ['Non-Veg', 'Gluten-Free'],
+    ingredients: [
+      '1 kg Mutton pieces',
+      '1 cup Yogurt',
+      '4 tbsp Ghee',
+      '2 Bay leaves',
+      '4 Green cardamom',
+      '1 inch Cinnamon',
+      '2 tsp Fennel powder',
+      '1 tsp Ginger powder',
+      'Kashmiri red chili powder',
+      'Saffron soaked in milk'
+    ],
+    steps: [
+      'Marinate mutton with yogurt and salt for 1 hour',
+      'Heat ghee in heavy-bottomed pot, add whole spices',
+      'Add marinated mutton and cook on high heat for 10 minutes',
+      'Add fennel powder, ginger powder, and Kashmiri chili powder',
+      'Cook covered on low heat for 1.5 hours until tender',
+      'Add saffron milk for color and aroma',
+      'Cook until oil separates and gravy thickens',
+      'Garnish with fresh coriander and serve with rice',
+      'Best enjoyed with Kashmiri naan or steamed basmati rice'
+    ],
+    calories: 380,
+    macros: { protein: 32, carbs: 5, fat: 24 },
+    culturalFact: 'Rogan Josh is the crown jewel of Kashmiri cuisine, brought by Persian cooks to the valley. The dish gets its name from \'rogan\' (oil) and \'josh\' (passion).',
+    substitutions: {
+      'mutton': 'chicken or paneer for lighter versions',
+      'Kashmiri chili': 'paprika for color without heat'
     },
     isOfflineAvailable: true
   }
@@ -304,68 +466,88 @@ export const mockRecipes: Recipe[] = [
 export const mockQuizQuestions = [
   {
     id: 1,
-    question: "How spicy do you like your food?",
+    question: "How spicy do you like your Indian food?",
     options: [
-      { value: "mild", label: "Mild - I prefer gentle flavors" },
-      { value: "medium", label: "Medium - A little kick is nice" },
-      { value: "hot", label: "Hot - Bring on the heat!" }
+      { value: "mild", label: "Mild - Like South Indian breakfast items" },
+      { value: "medium", label: "Medium - Like Punjabi curries" },
+      { value: "hot", label: "Hot - Like Andhra or Rajasthani food" }
     ]
   },
   {
     id: 2,
-    question: "What's your preferred cooking time?",
+    question: "What's your preferred cooking time for Indian recipes?",
     options: [
-      { value: "quick", label: "Under 15 minutes - Quick & easy" },
-      { value: "moderate", label: "15-30 minutes - Worth the wait" },
-      { value: "long", label: "30+ minutes - I enjoy the process" }
+      { value: "quick", label: "Under 30 minutes - Quick dal and sabzi" },
+      { value: "moderate", label: "30-60 minutes - Biryanis and curries" },
+      { value: "elaborate", label: "60+ minutes - Traditional dum cooking" }
     ]
   },
   {
     id: 3,
-    question: "Which cuisine excites you most?",
+    question: "Which Indian region's cuisine excites you most?",
     options: [
-      { value: "asian", label: "Asian - Thai, Japanese, Korean" },
-      { value: "european", label: "European - Italian, French, Greek" },
-      { value: "latin", label: "Latin - Mexican, Spanish" }
+      { value: "north", label: "North Indian - Punjab, Delhi, Kashmir" },
+      { value: "south", label: "South Indian - Tamil Nadu, Kerala, Karnataka" },
+      { value: "west", label: "West Indian - Gujarat, Maharashtra, Goa" },
+      { value: "east", label: "East Indian - Bengal, Odisha, Assam" }
     ]
   },
   {
     id: 4,
-    question: "What's your dietary preference?",
+    question: "What type of Indian meals do you prefer?",
     options: [
-      { value: "everything", label: "I eat everything" },
-      { value: "vegetarian", label: "Vegetarian" },
-      { value: "vegan", label: "Vegan" }
+      { value: "rice-based", label: "Rice-based - Biryani, South Indian meals" },
+      { value: "bread-based", label: "Bread-based - Roti, naan with curries" },
+      { value: "street-food", label: "Street food - Chaat, snacks, appetizers" }
+    ]
+  },
+  {
+    id: 5,
+    question: "What's your dietary preference for Indian cuisine?",
+    options: [
+      { value: "pure-veg", label: "Pure Vegetarian - Traditional Indian veg" },
+      { value: "non-veg", label: "Non-Vegetarian - Including chicken, mutton" },
+      { value: "coastal", label: "Coastal - Fish and seafood curries" }
     ]
   }
 ];
 
 export const mockQuizResults = {
-  "spicy-asian-lover": {
-    title: "Spicy Asian Food Explorer",
-    description: "You love bold flavors and authentic Asian cuisine!",
-    recommendedRecipes: ['1', '8', '5']
+  "spicy-north-indian": {
+    title: "Spicy North Indian Food Lover",
+    description: "You love the rich, spicy flavors of Punjab, Rajasthan, and Kashmir!",
+    recommendedRecipes: ['1', '3', '10']
   },
-  "comfort-european": {
-    title: "European Comfort Food Enthusiast",
-    description: "You appreciate classic, comforting European dishes.",
-    recommendedRecipes: ['2', '6', '7']
+  "mild-south-indian": {
+    title: "South Indian Cuisine Enthusiast",
+    description: "You appreciate the subtle flavors and healthy cooking of South India.",
+    recommendedRecipes: ['2', '8', '7']
   },
-  "quick-and-fresh": {
-    title: "Quick & Fresh Food Lover",
-    description: "You prefer fresh, quick meals that don't compromise on taste.",
-    recommendedRecipes: ['4', '7', '8']
+  "coastal-seafood": {
+    title: "Coastal Indian Food Explorer",
+    description: "You love the coconut-based curries and fresh seafood of coastal India.",
+    recommendedRecipes: ['4', '5', '8']
+  },
+  "street-food-lover": {
+    title: "Indian Street Food Connoisseur",
+    description: "You enjoy the vibrant flavors of Indian chaats and snacks.",
+    recommendedRecipes: ['6', '7', '9']
+  },
+  "traditional-home-cook": {
+    title: "Traditional Indian Home Cook",
+    description: "You prefer authentic, homestyle Indian cooking from various regions.",
+    recommendedRecipes: ['1', '2', '3']
   }
 };
 
 export const culturalFacts = [
-  "Saffron is worth more than gold by weight and comes from the stigmas of crocus flowers.",
-  "The fortune cookie was actually invented in California, not China.",
-  "Chocolate was once used as currency by the Aztecs and Maya civilizations."
+  "Saffron, worth more than gold, is primarily grown in Kashmir and gives dishes their royal golden color.",
+  "The concept of 'Dum' cooking was brought to India by the Mughals and involves slow cooking in sealed pots.",
+  "Each Indian state has its own unique spice blend - from Bengal's Panch Phoron to Karnataka's Sambar powder."
 ];
 
 export const substitutionTips = [
-  "Replace heavy cream with coconut cream for dairy-free cooking",
-  "Use applesauce instead of oil in baking for healthier desserts",
-  "Swap regular pasta with zucchini noodles for low-carb meals"
+  "Replace coconut milk with cashew cream for North Indian adaptations of South Indian dishes",
+  "Use hung curd instead of cream for healthier versions of rich Indian gravies",
+  "Substitute jaggery with dates paste for natural sweetness in traditional Indian sweets"
 ];
