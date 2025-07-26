@@ -10,6 +10,7 @@ import {
   ArrowLeft, ArrowRight, Check, Info, Globe
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { addToHistory, isFavorite, addToFavorites, removeFromFavorites } from '@/utils/storage';
 
 export default function RecipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -22,30 +23,34 @@ export default function RecipeDetail() {
   useEffect(() => {
     if (id) {
       const foundRecipe = mockRecipes.find(r => r.id === id);
-      setRecipe(foundRecipe || null);
-      
-      const saved = JSON.parse(localStorage.getItem('saved-recipes') || '[]');
-      setIsSaved(saved.includes(id));
+      if (foundRecipe) {
+        setRecipe(foundRecipe);
+        // Add to history when recipe is viewed
+        addToHistory(foundRecipe);
+        // Check if recipe is in favorites
+        setIsSaved(isFavorite(id));
+      }
     }
   }, [id]);
 
   const handleSave = () => {
     if (!recipe) return;
     
-    const saved = JSON.parse(localStorage.getItem('saved-recipes') || '[]');
-    const newSaved = isSaved
-      ? saved.filter((recipeId: string) => recipeId !== recipe.id)
-      : [...saved, recipe.id];
-    
-    localStorage.setItem('saved-recipes', JSON.stringify(newSaved));
-    setIsSaved(!isSaved);
-    
-    toast({
-      title: isSaved ? "Recipe removed" : "Recipe saved!",
-      description: isSaved 
-        ? `${recipe.title} removed from favorites` 
-        : `${recipe.title} saved to favorites`,
-    });
+    if (isSaved) {
+      removeFromFavorites(recipe.id);
+      setIsSaved(false);
+      toast({
+        title: "Recipe removed",
+        description: `${recipe.title} removed from favorites`,
+      });
+    } else {
+      addToFavorites(recipe);
+      setIsSaved(true);
+      toast({
+        title: "Recipe saved!",
+        description: `${recipe.title} saved to favorites`,
+      });
+    }
   };
 
   const handleStepComplete = (stepIndex: number) => {

@@ -12,6 +12,7 @@ const navigation = [
   { name: 'Explore', href: '/explore', icon: Compass },
   { name: 'Reverse Cook', href: '/reverse-cooking', icon: Utensils },
   { name: 'Leftovers', href: '/leftovers', icon: Lightbulb },
+  { name: 'Meal Plan', href: '/meal-plan', icon: Calendar },
   { name: 'Quiz', href: '/quiz', icon: Users },
   { name: 'Saved', href: '/saved', icon: Heart },
   { name: 'Settings', href: '/settings', icon: SettingsIcon },

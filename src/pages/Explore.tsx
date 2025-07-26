@@ -7,6 +7,7 @@ import { RecipeCard } from '@/components/RecipeCard';
 import { 
   mockRecipes, 
   Recipe, 
+  mockCategories,
   regionalCategories, 
   festivalCategories, 
   mealCategories,
@@ -14,7 +15,11 @@ import {
   dietTypes,
   spiceLevels,
   locationBasedSuggestions,
-  indianStates
+  indianStates,
+  mockFeaturedSections,
+  getRandomRecipes,
+  getTrendingRecipes,
+  getRecommendedRecipes
 } from '@/data/mockData';
 import { getUserLocation, getRecipesByLocation } from '@/utils/location';
 import { 
@@ -300,40 +305,85 @@ export default function Explore() {
           </section>
         )}
 
-        {/* Regional Categories */}
+        {/* Featured Categories */}
         <section className="mb-12">
           <div className="flex items-center gap-2 mb-6">
             <Compass className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-serif font-bold">Featured Categories</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockCategories.map(category => (
+              <Card key={category.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-semibold">{category.name}</h3>
+                    <p className="text-sm opacity-90">{category.recipeCount} recipes</p>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <p className="text-sm text-muted-foreground mb-3">{category.description}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {category.tags.slice(0, 3).map(tag => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Regional Categories */}
+        <section className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <MapPin className="h-6 w-6 text-primary" />
             <h2 className="text-2xl font-serif font-bold">Explore by Region</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.entries(regionalCategories).map(([key, region]) => (
-              <Card key={key} className="hover:shadow-lg transition-shadow cursor-pointer">
+            {regionalCategories.map(region => (
+              <Card key={region.name} className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
-                  <CardTitle className="text-xl font-serif">{region.name}</CardTitle>
-                  <p className="text-muted-foreground text-sm">{region.description}</p>
+                  <CardTitle className="text-xl font-serif flex items-center gap-2">
+                    <span>{region.icon}</span>
+                    {region.name}
+                  </CardTitle>
+                  <p className="text-muted-foreground text-sm">
+                    Traditional {region.cuisine} cuisine from {region.region} India
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div>
-                      <span className="text-sm font-medium">Popular Dishes:</span>
+                      <span className="text-sm font-medium">Specialties:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {region.popularDishes.slice(0, 2).map(dish => (
+                        {region.specialties?.slice(0, 2).map(dish => (
                           <Badge key={dish} variant="secondary" className="text-xs">
                             {dish}
                           </Badge>
-                        ))}
+                        )) || (
+                          <Badge variant="secondary" className="text-xs">
+                            Traditional Dishes
+                          </Badge>
+                        )}
                       </div>
                     </div>
                     <div>
-                      <span className="text-sm font-medium">Key Spices:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {region.spices.slice(0, 2).map(spice => (
-                          <Badge key={spice} variant="outline" className="text-xs">
-                            {spice}
-                          </Badge>
-                        ))}
-                      </div>
+                      <span className="text-sm font-medium">Region:</span>
+                      <Badge variant="outline" className="text-xs ml-1">
+                        {region.region}
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -350,26 +400,56 @@ export default function Explore() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {festivalCategories.map(festival => (
-              <Card key={festival.name} className="hover:shadow-lg transition-shadow">
+              <Card key={festival.name} className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
-                  <CardTitle className="text-xl font-serif">{festival.name}</CardTitle>
-                  <p className="text-muted-foreground text-sm">{festival.description}</p>
+                  <CardTitle className="text-xl font-serif flex items-center gap-2">
+                    <span>{festival.icon}</span>
+                    {festival.name}
+                  </CardTitle>
+                  <p className="text-muted-foreground text-sm">
+                    Traditional recipes for {festival.festival} celebrations
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex gap-1">
-                      {festival.colors.map(color => (
-                        <div 
-                          key={color} 
-                          className="w-4 h-4 rounded-full"
-                          style={{ backgroundColor: color.toLowerCase() }}
-                        />
-                      ))}
+                    <div>
+                      <span className="text-sm font-medium">Recipes:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {festival.recipes.slice(0, 2).map(recipe => (
+                          <Badge key={recipe.id} variant="secondary" className="text-xs">
+                            {recipe.title}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">{festival.period}</p>
+                    <div>
+                      <span className="text-sm font-medium">Festival:</span>
+                      <Badge variant="outline" className="text-xs ml-1">
+                        {festival.festival}
+                      </Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Trending Recipes */}
+        <section className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <TrendingUp className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-serif font-bold">Trending This Week</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {getTrendingRecipes().map((recipe) => (
+              <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                <RecipeCard
+                  recipe={recipe}
+                  onSave={handleSaveRecipe}
+                  isSaved={savedRecipes.includes(recipe.id)}
+                />
+              </Link>
             ))}
           </div>
         </section>

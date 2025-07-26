@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RecipeCard } from '@/components/RecipeCard';
 import { LocationSetup } from '@/components/LocationSetup';
+import ShuffleRecipe from '@/components/ShuffleRecipe';
 import { mockRecipes, Recipe } from '@/data/mockData';
-import { Shuffle, ChefHat, Sparkles, TrendingUp } from 'lucide-react';
+import { Shuffle, ChefHat, Sparkles, TrendingUp, MapPin, Clock, Heart, Flame } from 'lucide-react';
 import { isLocationSet, getUserLocation, getRecipesByLocation } from '@/utils/location';
 
 export default function Home() {
@@ -145,6 +146,24 @@ export default function Home() {
             </Card>
           </section>
         )}
+
+        {/* Shuffle Recipe Section */}
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+              <Sparkles className="mr-1 h-4 w-4" />
+              Feeling Lucky?
+            </Badge>
+            <h2 className="text-3xl font-serif font-bold gradient-text">
+              Random Recipe Discovery
+            </h2>
+            <p className="text-muted-foreground mt-2">
+              Let us surprise you with a random recipe from around the world
+            </p>
+          </div>
+          
+          <ShuffleRecipe />
+        </section>
 
         {/* Featured Recipes */}
         <section>

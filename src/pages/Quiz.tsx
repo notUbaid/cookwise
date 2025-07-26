@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { RecipeCard } from '@/components/RecipeCard';
-import { mockQuizQuestions, mockQuizResults, mockRecipes } from '@/data/mockData';
+import { quizQuestions, mockRecipes } from '@/data/mockData';
 import { Sparkles, RotateCcw, ChefHat } from 'lucide-react';
 
 export default function Quiz() {
@@ -14,13 +14,13 @@ export default function Quiz() {
   const [showResults, setShowResults] = useState(false);
   const [quizResult, setQuizResult] = useState<any>(null);
 
-  const progress = ((currentQuestion + 1) / mockQuizQuestions.length) * 100;
+  const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
 
   const handleAnswer = (value: string) => {
     const newAnswers = { ...answers, [currentQuestion]: value };
     setAnswers(newAnswers);
 
-    if (currentQuestion < mockQuizQuestions.length - 1) {
+    if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       // Calculate result based on answers
@@ -141,7 +141,7 @@ export default function Quiz() {
         {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Question {currentQuestion + 1} of {mockQuizQuestions.length}</span>
+            <span>Question {currentQuestion + 1} of {quizQuestions.length}</span>
             <span>{Math.round(progress)}% complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -151,12 +151,12 @@ export default function Quiz() {
         <Card className="card-premium fade-in">
           <CardHeader>
             <CardTitle className="text-xl font-serif">
-              {mockQuizQuestions[currentQuestion].question}
+              {quizQuestions[currentQuestion].question}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {mockQuizQuestions[currentQuestion].options.map((option) => (
+              {quizQuestions[currentQuestion].options.map((option) => (
                 <Button
                   key={option.value}
                   variant="outline"

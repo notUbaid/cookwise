@@ -8,7 +8,9 @@ import { SpoonacularRecipeCard } from '@/components/SpoonacularRecipeCard';
 import { 
   mockRecipes, 
   Recipe, 
-  leftoverRecipes 
+  leftoverRecipes,
+  getRandomRecipes,
+  commonIngredients
 } from '@/data/mockData';
 import { 
   ChefHat, 
@@ -134,37 +136,144 @@ export default function Leftovers() {
         setSuggestedRecipes(data);
       }
 
-      // Find local leftover recipes
-      const leftoverMatches = leftoverRecipes.filter(recipe => {
-        const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
-        return selectedLeftovers.some(leftover => 
-          recipeIngredients.includes(leftover.toLowerCase())
-        );
-      });
-
-      // Also check mock recipes for leftover-friendly dishes
-      const mockLeftoverMatches = mockRecipes.filter(recipe => {
-        const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
-        return selectedLeftovers.some(leftover => 
-          recipeIngredients.includes(leftover.toLowerCase())
-        );
-      }).map(recipe => ({
-        ...recipe,
-        type: 'mock',
-        leftoverCompatibility: selectedLeftovers.filter(leftover => 
-          recipe.ingredients.join(' ').toLowerCase().includes(leftover.toLowerCase())
-        ).length
-      }));
-
-      setLocalLeftoverRecipes([...leftoverMatches, ...mockLeftoverMatches]);
+      // Generate enhanced local leftover recipes
+      const enhancedLeftoverRecipes = generateEnhancedLeftoverRecipes();
+      setLocalLeftoverRecipes(enhancedLeftoverRecipes);
 
     } catch (error) {
       console.error('Error fetching leftover recipes:', error);
       setApiError(error instanceof Error ? error.message : 'Failed to fetch recipes');
-      setUseApi(false); // Fallback to local recipes only
+      
+      // Fallback to enhanced local recipes
+      const enhancedLeftoverRecipes = generateEnhancedLeftoverRecipes();
+      setLocalLeftoverRecipes(enhancedLeftoverRecipes);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const generateEnhancedLeftoverRecipes = () => {
+    // Enhanced local recipe generation based on selected leftovers
+    const enhancedLeftoverRecipes = [
+      {
+        id: 'lr1',
+        title: 'Roti Churma',
+        description: 'Sweet dessert made from leftover rotis',
+        ingredients: ['Leftover rotis', 'Ghee', 'Sugar', 'Cardamom', 'Nuts'],
+        image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
+        difficulty: 'Easy',
+        time: 15,
+        calories: 280,
+        cuisine: 'North Indian',
+        tags: ['Dessert', 'Sweet', 'Quick'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      },
+      {
+        id: 'lr2',
+        title: 'Dal Paratha',
+        description: 'Stuffed paratha using leftover dal',
+        ingredients: ['Leftover dal', 'Wheat flour', 'Spices', 'Oil', 'Onions'],
+        image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500',
+        difficulty: 'Medium',
+        time: 25,
+        calories: 320,
+        cuisine: 'North Indian',
+        tags: ['Bread', 'Stuffed', 'Protein'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      },
+      {
+        id: 'lr3',
+        title: 'Fried Rice',
+        description: 'Quick fried rice with leftover rice',
+        ingredients: ['Leftover rice', 'Vegetables', 'Soy sauce', 'Oil', 'Eggs'],
+        image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
+        difficulty: 'Easy',
+        time: 20,
+        calories: 350,
+        cuisine: 'Indo-Chinese',
+        tags: ['Quick', 'One-pot', 'Versatile'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      },
+      {
+        id: 'lr4',
+        title: 'Sabzi Paratha',
+        description: 'Stuffed paratha with leftover vegetables',
+        ingredients: ['Leftover sabzi', 'Wheat flour', 'Spices', 'Oil'],
+        image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
+        difficulty: 'Medium',
+        time: 30,
+        calories: 300,
+        cuisine: 'North Indian',
+        tags: ['Vegetarian', 'Stuffed', 'Healthy'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      },
+      {
+        id: 'lr5',
+        title: 'Chicken Biryani',
+        description: 'Biryani using leftover chicken',
+        ingredients: ['Leftover chicken', 'Rice', 'Spices', 'Onions', 'Yogurt'],
+        image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
+        difficulty: 'Hard',
+        time: 60,
+        calories: 450,
+        cuisine: 'Hyderabadi',
+        tags: ['Biryani', 'Non-veg', 'Festive'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      },
+      {
+        id: 'lr6',
+        title: 'Paneer Tikka',
+        description: 'Grilled paneer with leftover paneer',
+        ingredients: ['Leftover paneer', 'Yogurt', 'Spices', 'Bell peppers'],
+        image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
+        difficulty: 'Easy',
+        time: 20,
+        calories: 280,
+        cuisine: 'North Indian',
+        tags: ['Appetizer', 'Vegetarian', 'Grilled'],
+        type: 'leftover',
+        leftoverCompatibility: 1
+      }
+    ];
+
+    // Filter recipes based on selected leftovers
+    const filteredRecipes = enhancedLeftoverRecipes.filter(recipe => {
+      const recipeIngredients = recipe.ingredients.map(ing => ing.toLowerCase());
+      const selectedIngredients = selectedLeftovers.map(ing => ing.toLowerCase());
+      
+      // Check if any selected leftover matches recipe ingredients
+      return selectedIngredients.some(ingredient => 
+        recipeIngredients.some(recipeIng => 
+          recipeIng.includes(ingredient) || ingredient.includes(recipeIng)
+        )
+      );
+    });
+
+    // Also check mock recipes for leftover-friendly dishes
+    const mockLeftoverMatches = mockRecipes.filter(recipe => {
+      const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
+      return selectedLeftovers.some(leftover => 
+        recipeIngredients.includes(leftover.toLowerCase())
+      );
+    }).map(recipe => ({
+      ...recipe,
+      type: 'mock',
+      leftoverCompatibility: selectedLeftovers.filter(leftover => 
+        recipe.ingredients.join(' ').toLowerCase().includes(leftover.toLowerCase())
+      ).length
+    }));
+
+    // If no specific matches, return enhanced recipes + some mock recipes
+    const finalRecipes = filteredRecipes.length > 0 
+      ? [...filteredRecipes, ...mockLeftoverMatches.slice(0, 3)]
+      : [...enhancedLeftoverRecipes.slice(0, 4), ...getRandomRecipes(2)];
+
+    return finalRecipes;
   };
 
   const handleLeftoverSelect = (leftoverName: string) => {
