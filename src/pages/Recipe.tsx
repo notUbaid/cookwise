@@ -188,6 +188,12 @@ Fat: ${recipe.macros.fat}g
                 <Heart className={`mr-2 h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
                 {isSaved ? 'Saved' : 'Save Recipe'}
               </Button>
+              <Button asChild className="btn-accent">
+                <Link to={`/recipe/${recipe.id}/cook`}>
+                  <ChefHat className="mr-2 h-4 w-4" />
+                  Start Cooking
+                </Link>
+              </Button>
               <Button variant="outline" onClick={handleShare}>
                 <Share2 className="mr-2 h-4 w-4" />
                 Share

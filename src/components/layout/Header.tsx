@@ -3,19 +3,29 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, ChefHat, Search, BookOpen, Users, Heart } from 'lucide-react';
+import { LocationIndicator } from '@/components/LocationIndicator';
+import { Menu, ChefHat, Search, BookOpen, Users, Heart, Compass, Utensils, Settings as SettingsIcon, Lightbulb } from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/', icon: ChefHat },
   { name: 'Search', href: '/search', icon: Search },
+  { name: 'Explore', href: '/explore', icon: Compass },
+  { name: 'Reverse Cook', href: '/reverse-cooking', icon: Utensils },
+  { name: 'Leftovers', href: '/leftovers', icon: Lightbulb },
   { name: 'Quiz', href: '/quiz', icon: Users },
   { name: 'Saved', href: '/saved', icon: Heart },
+  { name: 'Settings', href: '/settings', icon: SettingsIcon },
   { name: 'Offline', href: '/offline', icon: BookOpen },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  const handleLocationChange = (city: string, state: string) => {
+    // This will be handled by the parent component
+    console.log('Location changed to:', city, state);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/60 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
@@ -48,6 +58,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
+          <LocationIndicator onLocationChange={handleLocationChange} />
           <ThemeToggle />
           
           {/* Mobile Navigation */}

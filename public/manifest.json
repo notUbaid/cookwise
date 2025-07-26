@@ -1,0 +1,73 @@
+{
+  "name": "Rasoi Khoj - Indian Recipe App",
+  "short_name": "Rasoi Khoj",
+  "description": "Discover authentic Indian recipes from every state and region",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fefce8",
+  "theme_color": "#166534",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["food", "lifestyle", "education"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Explore Recipes",
+      "short_name": "Explore",
+      "description": "Browse recipes by region and cuisine",
+      "url": "/explore",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Reverse Cooking",
+      "short_name": "Reverse Cook",
+      "description": "Find recipes based on available ingredients",
+      "url": "/reverse-cooking",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Saved Recipes",
+      "short_name": "Saved",
+      "description": "View your saved recipes",
+      "url": "/saved",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+} 

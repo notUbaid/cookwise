@@ -4,18 +4,34 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RecipeCard } from '@/components/RecipeCard';
+import { LocationSetup } from '@/components/LocationSetup';
 import { mockRecipes, Recipe } from '@/data/mockData';
 import { Shuffle, ChefHat, Sparkles, TrendingUp } from 'lucide-react';
+import { isLocationSet, getUserLocation, getRecipesByLocation } from '@/utils/location';
 
 export default function Home() {
   const [featuredRecipes, setFeaturedRecipes] = useState<Recipe[]>([]);
   const [recipeOfTheDay, setRecipeOfTheDay] = useState<Recipe | null>(null);
   const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
+  const [showLocationSetup, setShowLocationSetup] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
+  const [locationBasedRecipes, setLocationBasedRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
     // Load saved recipes from localStorage
     const saved = JSON.parse(localStorage.getItem('saved-recipes') || '[]');
     setSavedRecipes(saved);
+    
+    // Check if location is set
+    const location = getUserLocation();
+    if (location) {
+      setUserLocation(location);
+      const recipes = getRecipesByLocation(location.city, location.state);
+      setLocationBasedRecipes(recipes);
+    } else {
+      // Show location setup popup if no location is set
+      setShowLocationSetup(true);
+    }
     
     // Set featured recipes (first 6)
     setFeaturedRecipes(mockRecipes.slice(0, 6));
@@ -39,6 +55,13 @@ export default function Home() {
     localStorage.setItem('saved-recipes', JSON.stringify(newSaved));
   };
 
+  const handleLocationSet = (city: string, state: string) => {
+    setUserLocation({ city, state });
+    const recipes = getRecipesByLocation(city, state);
+    setLocationBasedRecipes(recipes);
+    setShowLocationSetup(false);
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -52,17 +75,24 @@ export default function Home() {
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto fade-in opacity-90">
             From Kashmir to Kerala, explore traditional recipes from every Indian state
           </p>
+          {userLocation && (
+            <div className="flex items-center justify-center gap-2 mb-6 fade-in">
+              <span className="text-lg opacity-90">
+                Discovering recipes near {userLocation.city}, {userLocation.state}
+              </span>
+            </div>
+          )}
           <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in">
             <Button asChild size="lg" className="btn-accent">
-              <Link to="/search">
+              <Link to="/explore">
                 <TrendingUp className="mr-2 h-5 w-5" />
                 Explore Recipes
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="btn-glass">
-              <Link to="/quiz">
+              <Link to="/reverse-cooking">
                 <Sparkles className="mr-2 h-5 w-5" />
-                Take Taste Quiz
+                Reverse Cooking
               </Link>
             </Button>
           </div>
@@ -150,6 +180,36 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Location-Based Recipes */}
+        {locationBasedRecipes.length > 0 && (
+          <section className="mb-16">
+            <div className="text-center mb-8">
+              <Badge className="mb-4 bg-accent text-accent-foreground">
+                <MapPin className="mr-1 h-4 w-4" />
+                Taste of {userLocation?.state}
+              </Badge>
+              <h2 className="text-3xl font-serif font-bold gradient-text">
+                Local Favorites
+              </h2>
+              <p className="text-muted-foreground mt-2">
+                Traditional recipes from your region
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+              {locationBasedRecipes.slice(0, 3).map((recipe) => (
+                <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                  <RecipeCard
+                    recipe={recipe}
+                    onSave={handleSaveRecipe}
+                    isSaved={savedRecipes.includes(recipe.id)}
+                  />
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Call to Action */}
         <section className="mt-20 text-center">
           <Card className="card-premium max-w-2xl mx-auto">
@@ -179,6 +239,13 @@ export default function Home() {
           </Card>
         </section>
       </div>
+
+      {/* Location Setup Popup */}
+      <LocationSetup
+        isOpen={showLocationSetup}
+        onClose={() => setShowLocationSetup(false)}
+        onLocationSet={handleLocationSet}
+      />
     </div>
   );
 }
