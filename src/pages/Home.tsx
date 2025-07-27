@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { RecipeCard } from '@/components/RecipeCard';
 import { LocationSetup } from '@/components/LocationSetup';
 import ShuffleRecipe from '@/components/ShuffleRecipe';
-import { mockRecipes, Recipe } from '@/data/mockData';
+import { mockRecipes, Recipe, getQuizPreferences, getRecommendedRecipes } from '@/data/mockData';
 import { Shuffle, ChefHat, Sparkles, TrendingUp, MapPin, Clock, Heart, Flame } from 'lucide-react';
 import { isLocationSet, getUserLocation, getRecipesByLocation } from '@/utils/location';
 
@@ -33,13 +33,20 @@ export default function Home() {
       // Show location setup popup if no location is set
       setShowLocationSetup(true);
     }
-    
+
+    // Use quiz preferences to filter recipes if available
+    const quizPrefs = getQuizPreferences();
+    let filteredRecipes = mockRecipes;
+    if (quizPrefs) {
+      filteredRecipes = getRecommendedRecipes(quizPrefs);
+    }
+
     // Set featured recipes (first 6)
-    setFeaturedRecipes(mockRecipes.slice(0, 6));
-    
+    setFeaturedRecipes(filteredRecipes.slice(0, 6));
+
     // Set recipe of the day (random)
-    const randomIndex = Math.floor(Math.random() * mockRecipes.length);
-    setRecipeOfTheDay(mockRecipes[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * filteredRecipes.length);
+    setRecipeOfTheDay(filteredRecipes[randomIndex]);
   }, []);
 
   const shuffleRecipes = () => {

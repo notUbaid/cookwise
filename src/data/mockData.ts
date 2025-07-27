@@ -733,9 +733,147 @@ export const spiceLevels = [
 ];
 
 export const commonIngredients = [
-  'Rice', 'Wheat Flour', 'Onions', 'Tomatoes', 'Potatoes', 'Ginger', 'Garlic',
-  'Turmeric', 'Cumin', 'Coriander', 'Chili Powder', 'Garam Masala', 'Oil',
-  'Ghee', 'Yogurt', 'Milk', 'Paneer', 'Chicken', 'Fish', 'Lentils', 'Chickpeas'
+  // Grains & Flours
+  { name: 'Rice', category: 'Grains', icon: '🍚' },
+  { name: 'Basmati Rice', category: 'Grains', icon: '🍚' },
+  { name: 'Brown Rice', category: 'Grains', icon: '🍚' },
+  { name: 'Wheat Flour', category: 'Grains', icon: '🌾' },
+  { name: 'Maida (Refined Flour)', category: 'Grains', icon: '🌾' },
+  { name: 'Ragi Flour', category: 'Grains', icon: '🌾' },
+  { name: 'Bajra (Pearl Millet)', category: 'Grains', icon: '🌾' },
+  { name: 'Jowar (Sorghum)', category: 'Grains', icon: '🌾' },
+  { name: 'Barley', category: 'Grains', icon: '🌾' },
+  { name: 'Poha (Flattened Rice)', category: 'Grains', icon: '🍚' },
+  { name: 'Sooji (Semolina)', category: 'Grains', icon: '🌾' },
+  { name: 'Vermicelli', category: 'Grains', icon: '🍝' },
+
+  // Pulses & Dals
+  { name: 'Toor Dal', category: 'Pulses', icon: '🥣' },
+  { name: 'Moong Dal', category: 'Pulses', icon: '🥣' },
+  { name: 'Chana Dal', category: 'Pulses', icon: '🥣' },
+  { name: 'Urad Dal', category: 'Pulses', icon: '🥣' },
+  { name: 'Masoor Dal', category: 'Pulses', icon: '🥣' },
+  { name: 'Rajma (Kidney Beans)', category: 'Pulses', icon: '🫘' },
+  { name: 'Chickpeas (Kabuli Chana)', category: 'Pulses', icon: '🫘' },
+  { name: 'Black Chickpeas (Kala Chana)', category: 'Pulses', icon: '🫘' },
+  { name: 'Green Gram (Whole Moong)', category: 'Pulses', icon: '🫘' },
+  { name: 'Lobia (Black-eyed Peas)', category: 'Pulses', icon: '🫘' },
+
+  // Vegetables
+  { name: 'Onions', category: 'Vegetables', icon: '🧅' },
+  { name: 'Tomatoes', category: 'Vegetables', icon: '🍅' },
+  { name: 'Potatoes', category: 'Vegetables', icon: '🥔' },
+  { name: 'Carrots', category: 'Vegetables', icon: '🥕' },
+  { name: 'Cauliflower', category: 'Vegetables', icon: '🥦' },
+  { name: 'Cabbage', category: 'Vegetables', icon: '🥬' },
+  { name: 'Green Peas', category: 'Vegetables', icon: '🟢' },
+  { name: 'French Beans', category: 'Vegetables', icon: '🟩' },
+  { name: 'Capsicum (Bell Pepper)', category: 'Vegetables', icon: '🫑' },
+  { name: 'Brinjal (Eggplant)', category: 'Vegetables', icon: '🍆' },
+  { name: 'Okra (Bhindi)', category: 'Vegetables', icon: '🟩' },
+  { name: 'Bitter Gourd (Karela)', category: 'Vegetables', icon: '🥒' },
+  { name: 'Bottle Gourd (Lauki)', category: 'Vegetables', icon: '🥒' },
+  { name: 'Pumpkin', category: 'Vegetables', icon: '🎃' },
+  { name: 'Spinach', category: 'Vegetables', icon: '🥬' },
+  { name: 'Fenugreek Leaves (Methi)', category: 'Vegetables', icon: '🌿' },
+  { name: 'Coriander Leaves', category: 'Vegetables', icon: '🌿' },
+  { name: 'Mint Leaves', category: 'Vegetables', icon: '🌿' },
+  { name: 'Drumstick', category: 'Vegetables', icon: '🥒' },
+  { name: 'Radish', category: 'Vegetables', icon: '🥗' },
+  { name: 'Beetroot', category: 'Vegetables', icon: '🟥' },
+  { name: 'Sweet Potato', category: 'Vegetables', icon: '🍠' },
+  { name: 'Cucumber', category: 'Vegetables', icon: '🥒' },
+  { name: 'Turnip', category: 'Vegetables', icon: '🥗' },
+  { name: 'Snake Gourd', category: 'Vegetables', icon: '🥒' },
+  { name: 'Ridge Gourd', category: 'Vegetables', icon: '🥒' },
+  { name: 'Cluster Beans (Gawar)', category: 'Vegetables', icon: '🟩' },
+  { name: 'Yam (Suran)', category: 'Vegetables', icon: '🍠' },
+  { name: 'Raw Banana', category: 'Vegetables', icon: '🍌' },
+  { name: 'Jackfruit', category: 'Vegetables', icon: '🍈' },
+
+  // Spices & Masalas
+  { name: 'Ginger', category: 'Spices', icon: '🫚' },
+  { name: 'Garlic', category: 'Spices', icon: '🧄' },
+  { name: 'Turmeric', category: 'Spices', icon: '🟡' },
+  { name: 'Cumin', category: 'Spices', icon: '🌱' },
+  { name: 'Coriander Seeds', category: 'Spices', icon: '🌿' },
+  { name: 'Mustard Seeds', category: 'Spices', icon: '⚫' },
+  { name: 'Fennel Seeds', category: 'Spices', icon: '🌱' },
+  { name: 'Fenugreek Seeds', category: 'Spices', icon: '🌱' },
+  { name: 'Carom Seeds (Ajwain)', category: 'Spices', icon: '🌱' },
+  { name: 'Nigella Seeds (Kalonji)', category: 'Spices', icon: '⚫' },
+  { name: 'Asafoetida (Hing)', category: 'Spices', icon: '🟡' },
+  { name: 'Curry Leaves', category: 'Spices', icon: '🌿' },
+  { name: 'Bay Leaf', category: 'Spices', icon: '🍃' },
+  { name: 'Cloves', category: 'Spices', icon: '🌰' },
+  { name: 'Cardamom', category: 'Spices', icon: '🌰' },
+  { name: 'Cinnamon', category: 'Spices', icon: '🌰' },
+  { name: 'Black Pepper', category: 'Spices', icon: '⚫' },
+  { name: 'Red Chili', category: 'Spices', icon: '🌶️' },
+  { name: 'Green Chili', category: 'Spices', icon: '🌶️' },
+  { name: 'Chili Powder', category: 'Spices', icon: '🌶️' },
+  { name: 'Garam Masala', category: 'Spices', icon: '🧂' },
+  { name: 'Sambar Powder', category: 'Spices', icon: '🧂' },
+  { name: 'Rasam Powder', category: 'Spices', icon: '🧂' },
+  { name: 'Pav Bhaji Masala', category: 'Spices', icon: '🧂' },
+  { name: 'Chaat Masala', category: 'Spices', icon: '🧂' },
+  { name: 'Tandoori Masala', category: 'Spices', icon: '🧂' },
+  { name: 'Kitchen King Masala', category: 'Spices', icon: '🧂' },
+
+  // Dairy
+  { name: 'Milk', category: 'Dairy', icon: '🥛' },
+  { name: 'Yogurt', category: 'Dairy', icon: '🥛' },
+  { name: 'Paneer', category: 'Dairy', icon: '🧀' },
+  { name: 'Ghee', category: 'Dairy', icon: '🧈' },
+  { name: 'Butter', category: 'Dairy', icon: '🧈' },
+  { name: 'Cheese', category: 'Dairy', icon: '🧀' },
+  { name: 'Cream', category: 'Dairy', icon: '🥛' },
+
+  // Oils & Fats
+  { name: 'Oil', category: 'Oils & Fats', icon: '🛢️' },
+  { name: 'Mustard Oil', category: 'Oils & Fats', icon: '🛢️' },
+  { name: 'Sunflower Oil', category: 'Oils & Fats', icon: '🛢️' },
+  { name: 'Groundnut Oil', category: 'Oils & Fats', icon: '🛢️' },
+  { name: 'Coconut Oil', category: 'Oils & Fats', icon: '🥥' },
+  { name: 'Sesame Oil', category: 'Oils & Fats', icon: '🛢️' },
+
+  // Proteins
+  { name: 'Chicken', category: 'Proteins', icon: '🍗' },
+  { name: 'Fish', category: 'Proteins', icon: '🐟' },
+  { name: 'Eggs', category: 'Proteins', icon: '🥚' },
+  { name: 'Mutton', category: 'Proteins', icon: '🍖' },
+  { name: 'Prawns', category: 'Proteins', icon: '🦐' },
+  { name: 'Paneer', category: 'Proteins', icon: '🧀' },
+  { name: 'Tofu', category: 'Proteins', icon: '🍢' },
+
+  // Fruits
+  { name: 'Banana', category: 'Fruits', icon: '🍌' },
+  { name: 'Mango', category: 'Fruits', icon: '🥭' },
+  { name: 'Apple', category: 'Fruits', icon: '🍎' },
+  { name: 'Orange', category: 'Fruits', icon: '🍊' },
+  { name: 'Papaya', category: 'Fruits', icon: '🍈' },
+  { name: 'Pineapple', category: 'Fruits', icon: '🍍' },
+  { name: 'Grapes', category: 'Fruits', icon: '🍇' },
+  { name: 'Guava', category: 'Fruits', icon: '🥝' },
+  { name: 'Pomegranate', category: 'Fruits', icon: '🍎' },
+  { name: 'Watermelon', category: 'Fruits', icon: '🍉' },
+  { name: 'Lemon', category: 'Fruits', icon: '🍋' },
+  { name: 'Coconut', category: 'Fruits', icon: '🥥' },
+
+  // Others
+  { name: 'Salt', category: 'Other', icon: '🧂' },
+  { name: 'Sugar', category: 'Other', icon: '🍬' },
+  { name: 'Jaggery', category: 'Other', icon: '🍯' },
+  { name: 'Honey', category: 'Other', icon: '🍯' },
+  { name: 'Tamarind', category: 'Other', icon: '🌰' },
+  { name: 'Vinegar', category: 'Other', icon: '🍶' },
+  { name: 'Baking Soda', category: 'Other', icon: '🧂' },
+  { name: 'Baking Powder', category: 'Other', icon: '🧂' },
+  { name: 'Yeast', category: 'Other', icon: '🍞' },
+  { name: 'Saffron', category: 'Other', icon: '🧡' },
+  { name: 'Rose Water', category: 'Other', icon: '🌹' },
+  { name: 'Kewra Water', category: 'Other', icon: '🌸' },
+  { name: 'Coconut', category: 'Other', icon: '🥥' },
 ];
 
 export const leftoverRecipes = [
@@ -831,47 +969,47 @@ export const quizQuestions = [
     id: 1,
     question: "What's your preferred spice level?",
     options: [
-      { text: "Mild - I prefer subtle flavors", value: "mild" },
-      { text: "Medium - I like balanced heat", value: "medium" },
-      { text: "Spicy - The hotter, the better!", value: "spicy" }
+      { label: "Mild - I prefer subtle flavors", value: "mild" },
+      { label: "Medium - I like balanced heat", value: "medium" },
+      { label: "Spicy - The hotter, the better!", value: "spicy" }
     ]
   },
   {
     id: 2,
     question: "Which cuisine interests you most?",
     options: [
-      { text: "North Indian - Rich and creamy", value: "north" },
-      { text: "South Indian - Light and tangy", value: "south" },
-      { text: "East Indian - Fish and rice based", value: "east" },
-      { text: "West Indian - Coastal flavors", value: "west" }
+      { label: "North Indian - Rich and creamy", value: "north" },
+      { label: "South Indian - Light and tangy", value: "south" },
+      { label: "East Indian - Fish and rice based", value: "east" },
+      { label: "West Indian - Coastal flavors", value: "west" }
     ]
   },
   {
     id: 3,
     question: "What's your cooking experience level?",
     options: [
-      { text: "Beginner - I'm just starting out", value: "easy" },
-      { text: "Intermediate - I can follow recipes", value: "medium" },
-      { text: "Advanced - I love experimenting", value: "hard" }
+      { label: "Beginner - I'm just starting out", value: "easy" },
+      { label: "Intermediate - I can follow recipes", value: "medium" },
+      { label: "Advanced - I love experimenting", value: "hard" }
     ]
   },
   {
     id: 4,
     question: "How much time do you usually have for cooking?",
     options: [
-      { text: "Quick meals - 30 minutes or less", value: "quick" },
-      { text: "Moderate time - 30-60 minutes", value: "medium" },
-      { text: "Leisurely cooking - Over an hour", value: "long" }
+      { label: "Quick meals - 30 minutes or less", value: "quick" },
+      { label: "Moderate time - 30-60 minutes", value: "medium" },
+      { label: "Leisurely cooking - Over an hour", value: "long" }
     ]
   },
   {
     id: 5,
     question: "What's your dietary preference?",
     options: [
-      { text: "Vegetarian", value: "veg" },
-      { text: "Vegan", value: "vegan" },
-      { text: "Non-vegetarian", value: "non-veg" },
-      { text: "Flexible - I eat everything", value: "flexible" }
+      { label: "Vegetarian", value: "veg" },
+      { label: "Vegan", value: "vegan" },
+      { label: "Non-vegetarian", value: "non-veg" },
+      { label: "Flexible - I eat everything", value: "flexible" }
     ]
   }
 ];
@@ -906,3 +1044,13 @@ export const getRecommendedRecipes = (preferences: any): Recipe[] => {
     return false;
   }).slice(0, 6);
 };
+
+export function getQuizPreferences() {
+  try {
+    const prefs = localStorage.getItem('cookwise-quiz-preferences');
+    if (prefs) return JSON.parse(prefs);
+    return null;
+  } catch {
+    return null;
+  }
+}

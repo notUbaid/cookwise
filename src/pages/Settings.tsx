@@ -30,6 +30,7 @@ export default function Settings() {
 
   const handleLocationSet = (city: string, state: string) => {
     setCurrentLocation({ city, state });
+    saveUserLocation(city, state);
     setShowLocationSetup(false);
   };
 
@@ -105,11 +106,10 @@ export default function Settings() {
                       </div>
                     </div>
                   </div>
-                  
                   <div className="text-sm text-muted-foreground">
                     <p>• You'll see recipes from {currentLocation.state} and nearby regions</p>
                     <p>• Location-based suggestions will appear on the home page</p>
-                    <p>• You can change this anytime from the header</p>
+                    <p>• You can change this anytime from the Settings page</p>
                   </div>
                 </div>
               ) : (
@@ -129,40 +129,6 @@ export default function Settings() {
           </Card>
 
           {/* App Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <SettingsIcon className="h-5 w-5 text-primary" />
-                App Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium mb-2">Features</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Location-aware recipe suggestions</li>
-                    <li>• Regional cuisine exploration</li>
-                    <li>• Guided cooking mode</li>
-                    <li>• Reverse cooking with ingredients</li>
-                    <li>• Offline recipe access</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">Supported Regions</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {['North', 'South', 'East', 'West', 'Central', 'Northeast'].map(region => (
-                      <Badge key={region} variant="outline" className="text-xs">
-                        {region}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
           <Card>
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>

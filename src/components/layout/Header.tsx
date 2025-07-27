@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { LocationIndicator } from '@/components/LocationIndicator';
 import { Menu, ChefHat, Search, BookOpen, Users, Heart, Compass, Utensils, Settings as SettingsIcon, Lightbulb } from 'lucide-react';
 
 const navigation = [
@@ -12,28 +11,23 @@ const navigation = [
   { name: 'Explore', href: '/explore', icon: Compass },
   { name: 'Reverse Cook', href: '/reverse-cooking', icon: Utensils },
   { name: 'Leftovers', href: '/leftovers', icon: Lightbulb },
-  { name: 'Meal Plan', href: '/meal-plan', icon: Calendar },
+  { name: 'Meal Plan', href: '/meal-plan', icon: Utensils }, // Use a more appropriate icon
   { name: 'Quiz', href: '/quiz', icon: Users },
   { name: 'Saved', href: '/saved', icon: Heart },
   { name: 'Settings', href: '/settings', icon: SettingsIcon },
-  { name: 'Offline', href: '/offline', icon: BookOpen },
+  // Removed Offline and any unused nav items
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const handleLocationChange = (city: string, state: string) => {
-    // This will be handled by the parent component
-    console.log('Location changed to:', city, state);
-  };
-
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/60 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-2">
-          <ChefHat className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-serif font-bold gradient-text">Rasoi Khoj</span>
+          <img src="/cookwise.jpeg" alt="CookWise Logo" className="h-8 w-8 rounded-full shadow-md border border-primary object-cover" />
+          <span className="text-2xl font-serif font-bold gradient-text">CookWise</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -59,9 +53,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <LocationIndicator onLocationChange={handleLocationChange} />
+          {/* Removed LocationIndicator from top bar */}
           <ThemeToggle />
-          
           {/* Mobile Navigation */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">

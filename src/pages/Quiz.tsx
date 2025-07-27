@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { RecipeCard } from '@/components/RecipeCard';
-import { quizQuestions, mockRecipes } from '@/data/mockData';
+import { quizQuestions, mockRecipes, getRecommendedRecipes } from '@/data/mockData';
 import { Sparkles, RotateCcw, ChefHat } from 'lucide-react';
 
 export default function Quiz() {
@@ -23,9 +23,24 @@ export default function Quiz() {
     if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Calculate result based on answers
-      const resultKey = calculateResult(newAnswers);
-      setQuizResult(mockQuizResults[resultKey as keyof typeof mockQuizResults]);
+      // Store quiz answers in localStorage
+      localStorage.setItem('cookwise-quiz-answers', JSON.stringify(newAnswers));
+      // Calculate preferences object
+      const preferences = {
+        spiceLevel: newAnswers[0],
+        cuisine: newAnswers[1],
+        experience: newAnswers[2],
+        time: newAnswers[3],
+        dietType: newAnswers[4],
+      };
+      localStorage.setItem('cookwise-quiz-preferences', JSON.stringify(preferences));
+      // Get recommended recipes
+      const recommended = getRecommendedRecipes(preferences);
+      setQuizResult({
+        title: 'Your Personalized Taste Profile',
+        description: 'Recipes matched to your quiz answers.',
+        recommendedRecipes: recommended.map(r => r.id),
+      });
       setShowResults(true);
     }
   };

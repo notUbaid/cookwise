@@ -1,3 +1,5 @@
+import { mockRecipes } from '../data/mockData';
+
 // Add this function in your component or utility file
 export async function getUserCityState() {
   console.log("Checking geolocation support...");
@@ -344,9 +346,6 @@ export function getRecipesByLocation(city: string, state: string) {
   );
   
   if (!userLocation) return [];
-  
-  // Import mockRecipes here to avoid circular dependency
-  const { mockRecipes } = require('../data/mockData');
   
   return mockRecipes.filter(recipe => 
     recipe.state === userLocation.state || 
