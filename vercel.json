@@ -9,14 +9,17 @@
       }
     },
     {
-      "src": "api/app.py",
-      "use": "@vercel/python"
+      "src": "api/simple_app.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/app.py"
+      "dest": "/api/simple_app.py"
     },
     {
       "src": "/(.*)",
@@ -24,8 +27,9 @@
     }
   ],
   "functions": {
-    "api/app.py": {
-      "maxDuration": 30
+    "api/simple_app.py": {
+      "maxDuration": 30,
+      "runtime": "python3.9"
     }
   }
 } 

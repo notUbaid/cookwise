@@ -277,7 +277,33 @@ export default function ReverseCooking() {
     setApiError(null);
 
     try {
-      if (useMLApi) {
+      if (useSpoonacularApi) {
+        // Call Spoonacular API
+        const apiKey = 'e24c011006b64874b7e968b89f5ddffe';
+        const ingredients = allSelected.join(',');
+        const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&apiKey=${apiKey}&number=15&ranking=2&ignorePantry=true`;
+        
+        console.log('Calling Spoonacular API:', url);
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          if (response.status === 402) {
+            throw new Error('Spoonacular API quota exceeded. Using local recipes instead.');
+          } else {
+            throw new Error(`Spoonacular API request failed: ${response.status} ${response.statusText}`);
+          }
+        }
+
+        const data = await response.json();
+        console.log('Spoonacular API response:', data);
+        
+        if (Array.isArray(data)) {
+          setSuggestedRecipes(data);
+        } else {
+          throw new Error('Invalid response format from Spoonacular API');
+        }
+      } else if (useMLApi) {
         // Call our ML API
         const apiUrl = process.env.NODE_ENV === 'production' 
           ? 'https://cookwise.vercel.app/api/recommend'
@@ -708,7 +734,7 @@ export default function ReverseCooking() {
                         </div>
                         <div>
                           <p className="text-sm font-medium">Online Recipe Database</p>
-                          <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API (currently disabled due to quota)</p>
+                          <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API</p>
                         </div>
                       </div>
                       <Button
@@ -716,9 +742,8 @@ export default function ReverseCooking() {
                         size="sm"
                         className="btn-shimmer"
                         onClick={() => setUseSpoonacularApi(!useSpoonacularApi)}
-                        disabled={true}
                       >
-                        DISABLED
+                        {useSpoonacularApi ? "ON" : "OFF"}
                       </Button>
                     </div>
                   </div>

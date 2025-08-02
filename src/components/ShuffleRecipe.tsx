@@ -61,7 +61,7 @@ export default function ShuffleRecipe() {
     setRandomRecipe(null);
 
     try {
-      const apiKey = '9890ecaff45543cdbe2d3ce0d62a94ef';
+      const apiKey = 'e24c011006b64874b7e968b89f5ddffe';
       const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=1&addRecipeInformation=true&fillIngredients=true&includeNutrition=true`;
 
       console.log('Fetching random recipe from Spoonacular...');
