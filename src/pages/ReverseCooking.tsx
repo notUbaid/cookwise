@@ -229,7 +229,7 @@ export default function ReverseCooking() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [useApi, setUseApi] = useState(true);
+  const [useMLApi, setUseMLApi] = useState(true);
   const [activeTab, setActiveTab] = useState('ingredients');
 
   useEffect(() => {
@@ -273,20 +273,40 @@ export default function ReverseCooking() {
     setApiError(null);
 
     try {
-      if (useApi) {
-        // Call Spoonacular API
-        const ingredients = allSelected.join(',');
-        const apiKey = '9890ecaff45543cdbe2d3ce0d62a94ef';
-        const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&apiKey=${apiKey}&number=15&ranking=2&ignorePantry=true`;
+      if (useMLApi) {
+        // Call our ML API
+        const apiUrl = process.env.NODE_ENV === 'production' 
+          ? 'https://your-vercel-domain.vercel.app/api/recommend'
+          : 'http://localhost:5000/recommend';
 
-        console.log('Calling Spoonacular API:', url);
+        // Get quiz preferences from localStorage
+        const quizPreferences = JSON.parse(localStorage.getItem('quiz-preferences') || '{}');
+        
+        // Get user location from localStorage
+        const userLocation = JSON.parse(localStorage.getItem('user-location') || '{}');
+
+        const requestData = {
+          ingredients: selectedIngredients,
+          leftovers: selectedLeftovers,
+          quiz_preferences: quizPreferences,
+          user_location: userLocation,
+          top_k: 15
+        };
+
+        console.log('Calling ML API:', apiUrl);
+        console.log('Request data:', requestData);
         
         // Add timeout to prevent hanging requests
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
         
         try {
-          const response = await fetch(url, {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
             signal: controller.signal
           });
           
@@ -294,29 +314,45 @@ export default function ReverseCooking() {
           
           if (!response.ok) {
             if (response.status === 404) {
-              throw new Error('API endpoint not found. Please check your internet connection or try again later.');
-            } else if (response.status === 401) {
-              throw new Error('API key is invalid or expired. Using local recipes instead.');
-            } else if (response.status === 429) {
-              throw new Error('API rate limit exceeded. Using local recipes instead.');
+              throw new Error('ML API endpoint not found. Please check your deployment.');
+            } else if (response.status === 500) {
+              throw new Error('ML API server error. Using local recipes instead.');
             } else {
-              throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+              throw new Error(`ML API request failed: ${response.status} ${response.statusText}`);
             }
           }
 
-          const data: SpoonacularRecipe[] = await response.json();
-          console.log('Spoonacular API response:', data);
+          const data = await response.json();
+          console.log('ML API response:', data);
 
-          if (data && Array.isArray(data)) {
-            setSuggestedRecipes(data);
+          if (data.status === 'success' && data.recommendations) {
+            // Convert ML API response to Spoonacular format for compatibility
+            const convertedRecipes = data.recommendations.map((recipe: any) => ({
+              id: recipe.id,
+              title: recipe.title,
+              image: recipe.image || '/placeholder.svg',
+              usedIngredientCount: recipe.matchScore || 0,
+              missedIngredientCount: 0,
+              usedIngredients: recipe.ingredients?.map((ing: string) => ({ name: ing })) || [],
+              missedIngredients: [],
+              unusedIngredients: [],
+              likes: recipe.rating || 0,
+              // Add ML-specific data
+              matchPercentage: recipe.matchPercentage,
+              quizMatch: recipe.quizMatch,
+              locationMatch: recipe.locationMatch,
+              leftoverCompatibility: recipe.leftoverCompatibility
+            }));
+            
+            setSuggestedRecipes(convertedRecipes);
           } else {
-            throw new Error('Invalid response format from API');
+            throw new Error('Invalid response format from ML API');
           }
         } catch (fetchError) {
           clearTimeout(timeoutId);
           if (fetchError instanceof Error) {
             if (fetchError.name === 'AbortError') {
-              throw new Error('Request timed out. Please try again.');
+              throw new Error('ML API request timed out. Using local recipes instead.');
             }
             throw fetchError;
           }
@@ -596,18 +632,18 @@ export default function ReverseCooking() {
                 </p>
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
-                  {/* API Toggle */}
+                  {/* ML API Toggle */}
                   <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                     <div>
-                      <p className="text-sm font-medium">Use Online Recipes</p>
-                      <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API</p>
+                      <p className="text-sm font-medium">Use ML-Powered Recommendations</p>
+                      <p className="text-xs text-muted-foreground">Get personalized suggestions using quiz data & location</p>
                     </div>
                     <Button
-                      variant={useApi ? "default" : "outline"}
+                      variant={useMLApi ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setUseApi(!useApi)}
+                      onClick={() => setUseMLApi(!useMLApi)}
                     >
-                      {useApi ? "ON" : "OFF"}
+                      {useMLApi ? "ON" : "OFF"}
                     </Button>
                   </div>
 
@@ -880,7 +916,7 @@ export default function ReverseCooking() {
                 )}
 
                 {/* API Error */}
-                {apiError && useApi && (
+                {apiError && useMLApi && (
                   <Card className="text-center py-8 border-destructive/20 bg-destructive/5">
                     <CardContent>
                       <div className="text-destructive mb-4">
@@ -917,13 +953,13 @@ export default function ReverseCooking() {
                   </Card>
                 )}
 
-                {/* Online Recipe Suggestions */}
-                {suggestedRecipes.length > 0 && !isLoading && useApi && (
+                {/* ML Recipe Suggestions */}
+                {suggestedRecipes.length > 0 && !isLoading && useMLApi && (
                   <section>
                     <div className="flex items-center gap-2 mb-6">
                       <BookOpen className="h-6 w-6 text-primary" />
                       <h2 className="text-2xl font-serif font-bold">
-                        Online Recipe Suggestions ({suggestedRecipes.length})
+                        ML-Powered Recipe Suggestions ({suggestedRecipes.length})
                       </h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
