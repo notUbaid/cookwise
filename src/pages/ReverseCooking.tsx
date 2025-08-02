@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { RecipeCard } from '@/components/RecipeCard';
 import { SpoonacularRecipeCard } from '@/components/SpoonacularRecipeCard';
 import { 
@@ -872,73 +873,100 @@ export default function ReverseCooking() {
                       </h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {localRecipes.map((recipe, index) => (
-                        <Card key={index} className="hover:shadow-lg transition-shadow">
-                          <CardHeader>
-                            <div className="flex items-start justify-between">
-                              <div>
-                                <CardTitle className="text-lg">{recipe.name || recipe.title}</CardTitle>
-                                <p className="text-sm text-muted-foreground">
-                                  {recipe.description || 'Perfect for your ingredients'}
-                                </p>
+                      {localRecipes.map((recipe, index) => {
+                        const allSelected = [...selectedIngredients, ...selectedLeftovers];
+                        const matchCount = recipe.matchScore || 0;
+                        const matchPercentage = allSelected.length > 0 ? (matchCount / allSelected.length) * 100 : 0;
+                        
+                        return (
+                          <Card key={index} className="hover:shadow-lg transition-shadow">
+                            <CardHeader>
+                              <div className="flex items-start justify-between">
+                                <div>
+                                  <CardTitle className="text-lg">{recipe.name || recipe.title}</CardTitle>
+                                  <p className="text-sm text-muted-foreground">
+                                    {recipe.description || 'Perfect for your ingredients'}
+                                  </p>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleSaveRecipe(recipe.id)}
+                                  className="text-muted-foreground hover:text-primary"
+                                >
+                                  <Heart className={`h-4 w-4 ${savedRecipes.includes(recipe.id) ? 'fill-current text-primary' : ''}`} />
+                                </Button>
                               </div>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleSaveRecipe(recipe.id)}
-                                className="text-muted-foreground hover:text-primary"
-                              >
-                                <Heart className={`h-4 w-4 ${savedRecipes.includes(recipe.id) ? 'fill-current text-primary' : ''}`} />
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-3">
-                              <div>
-                                <span className="text-sm font-medium">Ingredients:</span>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {recipe.ingredients.map((ingredient: string, idx: number) => (
-                                    <Badge 
-                                      key={idx} 
-                                      variant={
-                                        [...selectedIngredients, ...selectedLeftovers].some(item => 
-                                          ingredient.toLowerCase().includes(item.toLowerCase())
-                                        ) ? "secondary" : "outline"
-                                      } 
-                                      className="text-xs"
-                                    >
-                                      {ingredient}
-                                    </Badge>
-                                  ))}
+                            </CardHeader>
+                            <CardContent>
+                              <div className="space-y-3">
+                                {/* Progress Bar */}
+                                <div>
+                                  <div className="flex items-center justify-between text-sm mb-2">
+                                    <span className="font-medium">Ingredient Match</span>
+                                    <span className="text-muted-foreground">{Math.round(matchPercentage)}%</span>
+                                  </div>
+                                  <Progress value={matchPercentage} className="h-2" />
+                                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                                    <CheckCircle className="h-3 w-3 text-green-600" />
+                                    <span>{matchCount} of {allSelected.length} ingredients match</span>
+                                  </div>
+                                </div>
+
+                                {/* Ingredients with matching indicators */}
+                                <div>
+                                  <span className="text-sm font-medium">Ingredients:</span>
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {recipe.ingredients.map((ingredient: string, idx: number) => {
+                                      const isMatched = allSelected.some(item => 
+                                        ingredient.toLowerCase().includes(item.toLowerCase()) ||
+                                        item.toLowerCase().includes(ingredient.toLowerCase())
+                                      );
+                                      return (
+                                        <Badge 
+                                          key={idx} 
+                                          variant={isMatched ? "default" : "outline"}
+                                          className={`text-xs ${isMatched ? 'bg-green-100 text-green-800 border-green-200' : ''}`}
+                                        >
+                                          {isMatched && <CheckCircle className="h-3 w-3 mr-1" />}
+                                          {ingredient}
+                                        </Badge>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Recipe details */}
+                                <div className="flex items-center justify-between">
+                                  <Badge variant="secondary" className="text-xs">
+                                    <Clock className="mr-1 h-3 w-3" />
+                                    {recipe.time || recipe.cookingTime} min
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {recipe.difficulty || recipe.effort}
+                                  </Badge>
+                                </div>
+
+                                {/* Additional indicators */}
+                                <div className="flex items-center justify-between text-xs">
+                                  {recipe.leftoverCompatibility && recipe.leftoverCompatibility > 0 && (
+                                    <div className="flex items-center gap-1 text-blue-600">
+                                      <Lightbulb className="h-3 w-3" />
+                                      Uses {recipe.leftoverCompatibility} leftover{recipe.leftoverCompatibility > 1 ? 's' : ''}
+                                    </div>
+                                  )}
+                                  {matchPercentage >= 80 && (
+                                    <div className="flex items-center gap-1 text-green-600">
+                                      <Star className="h-3 w-3" />
+                                      Perfect Match!
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                              <div className="flex items-center justify-between">
-                                <Badge variant="secondary" className="text-xs">
-                                  <Clock className="mr-1 h-3 w-3" />
-                                  {recipe.time || recipe.cookingTime} min
-                                </Badge>
-                                <Badge variant="outline" className="text-xs">
-                                  {recipe.difficulty || recipe.effort}
-                                </Badge>
-                              </div>
-                              <div className="flex items-center justify-between text-xs">
-                                {recipe.matchScore && (
-                                  <div className="flex items-center gap-1 text-green-600">
-                                    <CheckCircle className="h-3 w-3" />
-                                    {recipe.matchScore} ingredient{recipe.matchScore > 1 ? 's' : ''} match
-                                  </div>
-                                )}
-                                {recipe.leftoverCompatibility && recipe.leftoverCompatibility > 0 && (
-                                  <div className="flex items-center gap-1 text-blue-600">
-                                    <Lightbulb className="h-3 w-3" />
-                                    Uses {recipe.leftoverCompatibility} leftover{recipe.leftoverCompatibility > 1 ? 's' : ''}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
                     </div>
                   </section>
                 )}
