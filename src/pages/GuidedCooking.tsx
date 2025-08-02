@@ -255,6 +255,9 @@ export default function GuidedCooking() {
   const handleNextStep = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
+    } else if (completedSteps.length === totalSteps) {
+      // All steps completed - navigate to recipe page or show completion
+      navigate(`/recipe/${recipe.id}`);
     }
   };
 
@@ -501,9 +504,12 @@ export default function GuidedCooking() {
               
               <Button
                 onClick={handleNextStep}
-                disabled={currentStep === totalSteps - 1}
+                disabled={currentStep === totalSteps - 1 && completedSteps.length !== totalSteps}
               >
-                Next Step
+                {currentStep === totalSteps - 1 && completedSteps.length === totalSteps 
+                  ? 'Complete Cooking' 
+                  : 'Next Step'
+                }
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -533,6 +539,20 @@ export default function GuidedCooking() {
                         Find More Recipes
                       </Link>
                     </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Step Completion Indicator */}
+            {currentStep === totalSteps - 1 && completedSteps.length === totalSteps && (
+              <Card className="mt-4 border-blue-200 bg-blue-50">
+                <CardContent className="pt-4 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-800">
+                      All steps completed! Click "Complete Cooking" to finish.
+                    </span>
                   </div>
                 </CardContent>
               </Card>
