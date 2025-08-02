@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -374,5 +377,23 @@
   /* Modern Badge */
   .badge-modern {
     @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 hover:scale-105;
+  }
+
+  /* Recipe card visibility fixes */
+  .recipe-card {
+    @apply block w-full h-auto;
+  }
+
+  .recipe-card img {
+    @apply w-full h-auto object-cover;
+  }
+
+  /* Ensure recipe suggestions are visible */
+  .recipe-suggestions {
+    @apply block w-full;
+  }
+
+  .recipe-suggestions .card {
+    @apply block w-full h-auto;
   }
 }

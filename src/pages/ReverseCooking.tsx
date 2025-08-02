@@ -317,7 +317,20 @@ export default function ReverseCooking() {
     const enhancedRecipes = generateEnhancedRecipes();
     console.log('Generated recipes:', enhancedRecipes);
     console.log('Setting local recipes:', enhancedRecipes.length);
-    setLocalRecipes(enhancedRecipes);
+    
+    // Always set some recipes, even if matching fails
+    if (enhancedRecipes.length === 0) {
+      console.log('No matches found, setting fallback recipes');
+      const fallbackRecipes = enhancedReverseRecipes.slice(0, 4).map(recipe => ({
+        ...recipe,
+        type: 'fallback',
+        matchScore: 1,
+        leftoverCompatibility: 0
+      }));
+      setLocalRecipes(fallbackRecipes);
+    } else {
+      setLocalRecipes(enhancedRecipes);
+    }
 
 
 
@@ -566,7 +579,7 @@ export default function ReverseCooking() {
       return fallbackRecipes;
     }
 
-    console.log('Returning matched recipes:', combinedRecipes.length);
+    console.log('Returning combined recipes:', combinedRecipes.length);
     return combinedRecipes;
   };
 
@@ -1050,6 +1063,20 @@ export default function ReverseCooking() {
 
           {/* Right Column - Recipe Suggestions */}
           <div className="lg:col-span-2 h-full overflow-y-auto">
+            {/* Debug Info - Temporary */}
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="font-semibold text-blue-800 mb-2">Debug Info</h3>
+              <div className="text-sm text-blue-700 space-y-1">
+                <p>Selected ingredients: {selectedIngredients.length} - {selectedIngredients.join(', ')}</p>
+                <p>Selected leftovers: {selectedLeftovers.length} - {selectedLeftovers.join(', ')}</p>
+                <p>Local recipes: {localRecipes.length}</p>
+                <p>Suggested recipes: {suggestedRecipes.length}</p>
+                <p>Is loading: {isLoading.toString()}</p>
+                <p>Use ML API: {useMLApi.toString()}</p>
+                <p>Use Spoonacular: {useSpoonacularApi.toString()}</p>
+              </div>
+            </div>
+            
             {(selectedIngredients.length === 0 && selectedLeftovers.length === 0) ? (
               /* Empty State */
               <Card className="text-center py-12">
@@ -1146,7 +1173,7 @@ export default function ReverseCooking() {
                 )}
 
                 {/* Local Recipe Suggestions */}
-                {localRecipes.length > 0 && !isLoading && (
+                {(localRecipes.length > 0 || (selectedIngredients.length > 0 || selectedLeftovers.length > 0)) && !isLoading && (
                   <section>
                     <div className="flex items-center gap-2 mb-6">
                       <Sparkles className="h-6 w-6 text-primary" />
@@ -1154,15 +1181,8 @@ export default function ReverseCooking() {
                         Smart Recipe Suggestions ({localRecipes.length})
                       </h2>
                     </div>
-                    {/* Debug info */}
-                    <div className="mb-4 p-3 bg-blue-50 rounded-lg text-sm">
-                      <p>Debug: Found {localRecipes.length} recipes</p>
-                      <p>Selected ingredients: {selectedIngredients.join(', ')}</p>
-                      <p>Selected leftovers: {selectedLeftovers.join(', ')}</p>
-                      <p>Recipe IDs: {localRecipes.map(r => r.id || r.title).join(', ')}</p>
-                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {localRecipes.map((recipe, index) => {
+                      {(localRecipes.length > 0 ? localRecipes : enhancedReverseRecipes.slice(0, 4)).map((recipe, index) => {
                         const allSelected = [...selectedIngredients, ...selectedLeftovers];
                         const matchCount = recipe.matchScore || 0;
                         const matchPercentage = allSelected.length > 0 ? (matchCount / allSelected.length) * 100 : 0;
@@ -1172,7 +1192,7 @@ export default function ReverseCooking() {
                             <CardHeader>
                               <div className="flex items-start justify-between">
                                 <div>
-                                  <CardTitle className="text-lg">{recipe.name || recipe.title}</CardTitle>
+                                  <CardTitle className="text-lg">{recipe.title || recipe.name}</CardTitle>
                                   <p className="text-sm text-muted-foreground">
                                     {recipe.description || 'Perfect for your ingredients'}
                                   </p>
@@ -1180,10 +1200,10 @@ export default function ReverseCooking() {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => handleSaveRecipe(recipe.id)}
+                                  onClick={() => handleSaveRecipe(recipe.id || recipe.title)}
                                   className="text-muted-foreground hover:text-primary"
                                 >
-                                  <Heart className={`h-4 w-4 ${savedRecipes.includes(recipe.id) ? 'fill-current text-primary' : ''}`} />
+                                  <Heart className={`h-4 w-4 ${savedRecipes.includes(recipe.id || recipe.title) ? 'fill-current text-primary' : ''}`} />
                                 </Button>
                               </div>
                             </CardHeader>
@@ -1206,7 +1226,7 @@ export default function ReverseCooking() {
                                 <div>
                                   <span className="text-sm font-medium">Ingredients:</span>
                                   <div className="flex flex-wrap gap-1 mt-1">
-                                    {recipe.ingredients.map((ingredient: string, idx: number) => {
+                                    {(recipe.ingredients || []).map((ingredient: string, idx: number) => {
                                       const isMatched = allSelected.some(item => 
                                         ingredient.toLowerCase().includes(item.toLowerCase()) ||
                                         item.toLowerCase().includes(ingredient.toLowerCase())
@@ -1229,10 +1249,10 @@ export default function ReverseCooking() {
                                 <div className="flex items-center justify-between">
                                   <Badge variant="secondary" className="text-xs">
                                     <Clock className="mr-1 h-3 w-3" />
-                                    {recipe.time || recipe.cookingTime} min
+                                    {recipe.time || recipe.cookingTime || '30'} min
                                   </Badge>
                                   <Badge variant="outline" className="text-xs">
-                                    {recipe.difficulty || recipe.effort}
+                                    {recipe.difficulty || recipe.effort || 'Medium'}
                                   </Badge>
                                 </div>
 
@@ -1262,7 +1282,7 @@ export default function ReverseCooking() {
 
 
 
-                {/* No Matches */}
+                {/* No Matches - This should rarely show now with our fallback logic */}
                 {suggestedRecipes.length === 0 && localRecipes.length === 0 && (selectedIngredients.length > 0 || selectedLeftovers.length > 0) && !isLoading && (
                   <Card className="text-center py-12">
                     <CardContent>
