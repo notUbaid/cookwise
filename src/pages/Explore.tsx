@@ -766,67 +766,68 @@ export default function Explore() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getFilteredFestivals().map(festival => {
-                const festivalRecipes = getRecipesByFestival(festival.name);
-                return (
-                  <Card 
-                    key={festival.name} 
-                    className="hover:shadow-lg transition-shadow cursor-pointer group"
-                    onClick={() => handleFestivalClick(festival.name)}
-                  >
-                    <CardHeader>
-                      <CardTitle className="text-xl font-serif flex items-center gap-2">
-                        <span>{festival.icon}</span>
-                        {festival.name}
-                      </CardTitle>
-                      <p className="text-muted-foreground text-sm">
-                        Traditional recipes for {festival.festival} celebrations
-                      </p>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div>
-                          <span className="text-sm font-medium">Available Recipes:</span>
-                          <Badge 
-                            variant={festivalRecipes.length > 3 ? "default" : "secondary"} 
-                            className="text-xs ml-2"
-                          >
-                            {festivalRecipes.length} recipes
-                          </Badge>
-                          {festivalRecipes.length > 5 && (
-                            <Badge variant="destructive" className="text-xs ml-1">
-                              Popular!
+                {getFilteredFestivals().map((festival) => {
+                  const festivalRecipes = getRecipesByFestival(festival.name);
+                  return (
+                    <Card 
+                      key={festival.name} 
+                      className="hover:shadow-lg transition-shadow cursor-pointer group"
+                      onClick={() => handleFestivalClick(festival.name)}
+                    >
+                      <CardHeader>
+                        <CardTitle className="text-xl font-serif flex items-center gap-2">
+                          <span>{festival.icon}</span>
+                          {festival.name}
+                        </CardTitle>
+                        <p className="text-muted-foreground text-sm">
+                          Traditional recipes for {festival.festival} celebrations
+                        </p>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div>
+                            <span className="text-sm font-medium">Available Recipes:</span>
+                            <Badge 
+                              variant={festivalRecipes.length > 3 ? "default" : "secondary"} 
+                              className="text-xs ml-2"
+                            >
+                              {festivalRecipes.length} recipes
                             </Badge>
+                            {festivalRecipes.length > 5 && (
+                              <Badge variant="destructive" className="text-xs ml-1">
+                                Popular!
+                              </Badge>
+                            )}
+                          </div>
+                          <div>
+                            <span className="text-sm font-medium">Festival:</span>
+                            <Badge variant="outline" className="text-xs ml-1">
+                              {festival.festival}
+                            </Badge>
+                          </div>
+                          {festivalRecipes.length > 0 && (
+                            <div>
+                              <span className="text-sm font-medium">Popular Dishes:</span>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {festivalRecipes.slice(0, 2).map((recipe) => (
+                                  <Badge key={recipe.id} variant="secondary" className="text-xs">
+                                    {recipe.title}
+                                  </Badge>
+                                ))}
+                                {festivalRecipes.length > 2 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{festivalRecipes.length - 2} more
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
                           )}
                         </div>
-                        <div>
-                          <span className="text-sm font-medium">Festival:</span>
-                          <Badge variant="outline" className="text-xs ml-1">
-                            {festival.festival}
-                          </Badge>
-                        </div>
-                        {festivalRecipes.length > 0 && (
-                          <div>
-                            <span className="text-sm font-medium">Popular Dishes:</span>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {festivalRecipes.slice(0, 2).map(recipe => (
-                                <Badge key={recipe.id} variant="secondary" className="text-xs">
-                                  {recipe.title}
-                                </Badge>
-                              ))}
-                              {festivalRecipes.length > 2 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{festivalRecipes.length - 2} more
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           )}
         </section>
