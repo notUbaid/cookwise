@@ -18,7 +18,7 @@ class MLApiService {
 
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://your-vercel-domain.vercel.app/api'
+      ? 'https://cookwise.vercel.app/api'
       : 'http://localhost:5000';
   }
 

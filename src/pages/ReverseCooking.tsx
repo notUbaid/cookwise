@@ -229,7 +229,7 @@ export default function ReverseCooking() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [useMLApi, setUseMLApi] = useState(true);
+  const [useMLApi, setUseMLApi] = useState(false);
   const [activeTab, setActiveTab] = useState('ingredients');
 
   useEffect(() => {
@@ -276,7 +276,7 @@ export default function ReverseCooking() {
       if (useMLApi) {
         // Call our ML API
         const apiUrl = process.env.NODE_ENV === 'production' 
-          ? 'https://your-vercel-domain.vercel.app/api/recommend'
+          ? 'https://cookwise.vercel.app/api/recommend'
           : 'http://localhost:5000/recommend';
 
         // Get quiz preferences from localStorage

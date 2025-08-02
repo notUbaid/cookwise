@@ -32,73 +32,143 @@ recipes_data = None
 def load_mock_data():
     """Load mock recipe data"""
     try:
-        # This will be replaced with actual data loading
-        mock_recipes = [
-            {
-                "id": "1",
-                "title": "Butter Chicken",
-                "description": "Creamy and flavorful Indian curry",
-                "ingredients": ["chicken", "butter", "tomato", "cream", "spices"],
-                "cuisine": "North Indian",
-                "region": "North",
-                "state": "Punjab",
-                "difficulty": "Medium",
-                "cookingTime": 45,
-                "calories": 450,
-                "servings": 4,
-                "dietType": ["Non-Veg"],
-                "spiceLevel": "Medium",
-                "mealType": "Dinner",
-                "isHealthy": False,
-                "isFestive": True,
-                "isStreetFood": False,
-                "tags": ["curry", "chicken", "creamy"],
-                "rating": 4.5
-            },
-            {
-                "id": "2",
-                "title": "Dal Khichdi",
-                "description": "Comforting rice and lentil dish",
-                "ingredients": ["rice", "dal", "vegetables", "spices", "ghee"],
-                "cuisine": "Gujarati",
-                "region": "West",
-                "state": "Gujarat",
-                "difficulty": "Easy",
-                "cookingTime": 30,
-                "calories": 320,
-                "servings": 4,
-                "dietType": ["Veg"],
-                "spiceLevel": "Mild",
-                "mealType": "Lunch",
-                "isHealthy": True,
-                "isFestive": False,
-                "isStreetFood": False,
-                "tags": ["comfort", "healthy", "one-pot"],
-                "rating": 4.2
-            },
-            {
-                "id": "3",
-                "title": "Masala Dosa",
-                "description": "Crispy South Indian crepe with potato filling",
-                "ingredients": ["rice", "urad dal", "potato", "onion", "spices"],
-                "cuisine": "South Indian",
-                "region": "South",
-                "state": "Karnataka",
-                "difficulty": "Hard",
-                "cookingTime": 60,
-                "calories": 280,
-                "servings": 2,
-                "dietType": ["Veg"],
-                "spiceLevel": "Medium",
-                "mealType": "Breakfast",
-                "isHealthy": True,
-                "isFestive": False,
-                "isStreetFood": True,
-                "tags": ["breakfast", "crispy", "traditional"],
-                "rating": 4.7
-            }
-        ]
-        return mock_recipes
+        # Import the actual mock data from your existing system
+        import sys
+        import os
+        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        
+        try:
+            from src.data.mockData import mockRecipes, enhancedReverseRecipes, leftoverRecipes
+            # Combine all recipe sources
+            all_recipes = []
+            
+            # Add mockRecipes
+            if mockRecipes:
+                all_recipes.extend(mockRecipes)
+            
+            # Add enhancedReverseRecipes
+            if enhancedReverseRecipes:
+                all_recipes.extend(enhancedReverseRecipes)
+            
+            # Add leftoverRecipes
+            if leftoverRecipes:
+                all_recipes.extend(leftoverRecipes)
+            
+            print(f"Loaded {len(all_recipes)} recipes from mock data")
+            return all_recipes
+            
+        except ImportError:
+            # Fallback to basic recipes if import fails
+            print("Could not import mock data, using fallback recipes")
+            fallback_recipes = [
+                {
+                    "id": "1",
+                    "title": "Butter Chicken",
+                    "description": "Creamy and flavorful Indian curry",
+                    "ingredients": ["chicken", "butter", "tomato", "cream", "spices"],
+                    "cuisine": "North Indian",
+                    "region": "North",
+                    "state": "Punjab",
+                    "difficulty": "Medium",
+                    "cookingTime": 45,
+                    "calories": 450,
+                    "servings": 4,
+                    "dietType": ["Non-Veg"],
+                    "spiceLevel": "Medium",
+                    "mealType": "Dinner",
+                    "isHealthy": False,
+                    "isFestive": True,
+                    "isStreetFood": False,
+                    "tags": ["curry", "chicken", "creamy"],
+                    "rating": 4.5
+                },
+                {
+                    "id": "2",
+                    "title": "Dal Khichdi",
+                    "description": "Comforting rice and lentil dish",
+                    "ingredients": ["rice", "dal", "vegetables", "spices", "ghee"],
+                    "cuisine": "Gujarati",
+                    "region": "West",
+                    "state": "Gujarat",
+                    "difficulty": "Quick",
+                    "cookingTime": 30,
+                    "calories": 320,
+                    "servings": 4,
+                    "dietType": ["Veg"],
+                    "spiceLevel": "Mild",
+                    "mealType": "Lunch",
+                    "isHealthy": True,
+                    "isFestive": False,
+                    "isStreetFood": False,
+                    "tags": ["comfort", "healthy", "one-pot"],
+                    "rating": 4.2
+                },
+                {
+                    "id": "3",
+                    "title": "Masala Dosa",
+                    "description": "Crispy South Indian crepe with potato filling",
+                    "ingredients": ["rice", "urad dal", "potato", "onion", "spices"],
+                    "cuisine": "South Indian",
+                    "region": "South",
+                    "state": "Karnataka",
+                    "difficulty": "Long",
+                    "cookingTime": 60,
+                    "calories": 280,
+                    "servings": 2,
+                    "dietType": ["Veg"],
+                    "spiceLevel": "Medium",
+                    "mealType": "Breakfast",
+                    "isHealthy": True,
+                    "isFestive": False,
+                    "isStreetFood": True,
+                    "tags": ["breakfast", "crispy", "traditional"],
+                    "rating": 4.7
+                },
+                {
+                    "id": "4",
+                    "title": "Rice and Dal",
+                    "description": "Simple and nutritious rice with lentils",
+                    "ingredients": ["rice", "dal", "onion", "tomato", "spices"],
+                    "cuisine": "Indian",
+                    "region": "All",
+                    "state": "All",
+                    "difficulty": "Quick",
+                    "cookingTime": 25,
+                    "calories": 300,
+                    "servings": 2,
+                    "dietType": ["Veg"],
+                    "spiceLevel": "Mild",
+                    "mealType": "Lunch",
+                    "isHealthy": True,
+                    "isFestive": False,
+                    "isStreetFood": False,
+                    "tags": ["simple", "nutritious", "comfort"],
+                    "rating": 4.0
+                },
+                {
+                    "id": "5",
+                    "title": "Wheat Flour Roti",
+                    "description": "Soft and fluffy Indian bread",
+                    "ingredients": ["wheat flour", "water", "salt", "oil"],
+                    "cuisine": "Indian",
+                    "region": "All",
+                    "state": "All",
+                    "difficulty": "Medium",
+                    "cookingTime": 20,
+                    "calories": 150,
+                    "servings": 4,
+                    "dietType": ["Veg"],
+                    "spiceLevel": "Mild",
+                    "mealType": "Dinner",
+                    "isHealthy": True,
+                    "isFestive": False,
+                    "isStreetFood": False,
+                    "tags": ["bread", "simple", "traditional"],
+                    "rating": 4.3
+                }
+            ]
+            return fallback_recipes
+            
     except Exception as e:
         print(f"Error loading mock data: {e}")
         return []
