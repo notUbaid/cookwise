@@ -1063,20 +1063,6 @@ export default function ReverseCooking() {
 
           {/* Right Column - Recipe Suggestions */}
           <div className="lg:col-span-2 h-full overflow-y-auto">
-            {/* Debug Info - Temporary */}
-            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="font-semibold text-blue-800 mb-2">Debug Info</h3>
-              <div className="text-sm text-blue-700 space-y-1">
-                <p>Selected ingredients: {selectedIngredients.length} - {selectedIngredients.join(', ')}</p>
-                <p>Selected leftovers: {selectedLeftovers.length} - {selectedLeftovers.join(', ')}</p>
-                <p>Local recipes: {localRecipes.length}</p>
-                <p>Suggested recipes: {suggestedRecipes.length}</p>
-                <p>Is loading: {isLoading.toString()}</p>
-                <p>Use ML API: {useMLApi.toString()}</p>
-                <p>Use Spoonacular: {useSpoonacularApi.toString()}</p>
-              </div>
-            </div>
-            
             {(selectedIngredients.length === 0 && selectedLeftovers.length === 0) ? (
               /* Empty State */
               <Card className="text-center py-12">
