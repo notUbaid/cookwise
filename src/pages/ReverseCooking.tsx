@@ -254,8 +254,39 @@ export default function ReverseCooking() {
     // Generate local recipes immediately for instant feedback
     console.log('Generating local recipes...');
     const enhancedRecipes = generateEnhancedRecipes();
+    console.log('Generated recipes:', enhancedRecipes);
     console.log('Setting local recipes:', enhancedRecipes.length);
     setLocalRecipes(enhancedRecipes);
+
+    // Force display some test recipes if no matches found
+    if (enhancedRecipes.length === 0) {
+      console.log('No matches found, setting fallback recipes');
+      const fallbackRecipes = [
+        {
+          id: 'test1',
+          title: 'Test Recipe 1',
+          description: 'A test recipe for debugging',
+          ingredients: ['Rice', 'Vegetables', 'Spices'],
+          image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
+          difficulty: 'Easy',
+          time: 20,
+          matchScore: 1,
+          leftoverCompatibility: 0
+        },
+        {
+          id: 'test2',
+          title: 'Test Recipe 2',
+          description: 'Another test recipe',
+          ingredients: ['Chicken', 'Rice', 'Spices'],
+          image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
+          difficulty: 'Medium',
+          time: 30,
+          matchScore: 1,
+          leftoverCompatibility: 0
+        }
+      ];
+      setLocalRecipes(fallbackRecipes);
+    }
 
     // Then try to fetch API recipes
     findRecipes();
@@ -1007,7 +1038,7 @@ export default function ReverseCooking() {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => setUseApi(false)}
+                          onClick={() => setUseMLApi(false)}
                         >
                           Use Local Recipes
                         </Button>
@@ -1050,6 +1081,13 @@ export default function ReverseCooking() {
                       <h2 className="text-2xl font-serif font-bold">
                         Smart Recipe Suggestions ({localRecipes.length})
                       </h2>
+                    </div>
+                    {/* Debug info */}
+                    <div className="mb-4 p-3 bg-blue-50 rounded-lg text-sm">
+                      <p>Debug: Found {localRecipes.length} recipes</p>
+                      <p>Selected ingredients: {selectedIngredients.join(', ')}</p>
+                      <p>Selected leftovers: {selectedLeftovers.join(', ')}</p>
+                      <p>Recipe IDs: {localRecipes.map(r => r.id || r.title).join(', ')}</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {localRecipes.map((recipe, index) => {
@@ -1150,6 +1188,40 @@ export default function ReverseCooking() {
                   </section>
                 )}
 
+                {/* Test Recipes - Always show when ingredients are selected */}
+                {(selectedIngredients.length > 0 || selectedLeftovers.length > 0) && (
+                  <section className="mb-8">
+                    <div className="flex items-center gap-2 mb-6">
+                      <BookOpen className="h-6 w-6 text-primary" />
+                      <h2 className="text-2xl font-serif font-bold">
+                        Test Recipes (Debug)
+                      </h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Card className="hover:shadow-lg transition-shadow">
+                        <CardHeader>
+                          <CardTitle className="text-lg">Test Recipe 1</CardTitle>
+                          <p className="text-sm text-muted-foreground">A test recipe for debugging</p>
+                        </CardHeader>
+                        <CardContent>
+                          <p>This is a test recipe to verify the display is working.</p>
+                          <p>Selected: {selectedIngredients.join(', ')}</p>
+                        </CardContent>
+                      </Card>
+                      <Card className="hover:shadow-lg transition-shadow">
+                        <CardHeader>
+                          <CardTitle className="text-lg">Test Recipe 2</CardTitle>
+                          <p className="text-sm text-muted-foreground">Another test recipe</p>
+                        </CardHeader>
+                        <CardContent>
+                          <p>This is another test recipe.</p>
+                          <p>Selected: {selectedLeftovers.join(', ')}</p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </section>
+                )}
+
                 {/* No Matches */}
                 {suggestedRecipes.length === 0 && localRecipes.length === 0 && (selectedIngredients.length > 0 || selectedLeftovers.length > 0) && !isLoading && (
                   <Card className="text-center py-12">
@@ -1159,6 +1231,16 @@ export default function ReverseCooking() {
                       <p className="text-muted-foreground mb-6">
                         We couldn't find recipes with your selected ingredients and leftovers. Try adding more items or different combinations.
                       </p>
+                      {/* Debug info */}
+                      <div className="mb-4 p-3 bg-red-50 rounded-lg text-sm text-left">
+                        <p><strong>Debug Info:</strong></p>
+                        <p>Selected ingredients: {selectedIngredients.join(', ') || 'None'}</p>
+                        <p>Selected leftovers: {selectedLeftovers.join(', ') || 'None'}</p>
+                        <p>Local recipes count: {localRecipes.length}</p>
+                        <p>Suggested recipes count: {suggestedRecipes.length}</p>
+                        <p>Is loading: {isLoading.toString()}</p>
+                        <p>Use ML API: {useMLApi.toString()}</p>
+                      </div>
                       <Button variant="outline" onClick={clearSelection}>
                         <RefreshCw className="mr-2 h-4 w-4" />
                         Try Different Items
