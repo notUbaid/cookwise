@@ -22,7 +22,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Medium",
         "mealType": "Dinner",
         "rating": 4.5,
-        "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500"
+        "image": "/hackimage/chetinad chicken.jpg"
     },
     {
         "id": "2",
@@ -38,7 +38,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Mild",
         "mealType": "Lunch",
         "rating": 4.2,
-        "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500"
+        "image": "/hackimage/daal.jpg"
     },
     {
         "id": "3",
@@ -54,7 +54,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Medium",
         "mealType": "Appetizer",
         "rating": 4.3,
-        "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500"
+        "image": "/hackimage/paneerpakoda.jpg"
     },
     {
         "id": "4",
@@ -70,7 +70,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Medium",
         "mealType": "Breakfast",
         "rating": 4.4,
-        "image": "https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500"
+        "image": "/hackimage/dosa.jpg"
     },
     {
         "id": "5",
@@ -86,7 +86,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Spicy",
         "mealType": "Dinner",
         "rating": 4.6,
-        "image": "https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500"
+        "image": "/hackimage/hyderabadibiryani.jpg"
     },
     {
         "id": "6",
@@ -102,7 +102,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Mild",
         "mealType": "Breakfast",
         "rating": 4.1,
-        "image": "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500"
+        "image": "/hackimage/thepla.jpg"
     },
     {
         "id": "7",
@@ -118,7 +118,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Spicy",
         "mealType": "Lunch",
         "rating": 4.3,
-        "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500"
+        "image": "/hackimage/goanfishcurry.jpg"
     },
     {
         "id": "8",
@@ -134,7 +134,7 @@ RECIPES_DATABASE = [
         "spiceLevel": "Mild",
         "mealType": "Lunch",
         "rating": 4.0,
-        "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500"
+        "image": "/hackimage/thepla.jpg"
     }
 ]
 
