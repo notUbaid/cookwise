@@ -131,10 +131,7 @@ export default function Explore() {
     }
 
     if (selectedFestival) {
-      const festival = festivalCategories.find(f => f.name === selectedFestival);
-      if (festival) {
-        filtered = filtered.filter(recipe => festival.recipes.includes(recipe.id));
-      }
+      filtered = filtered.filter(recipe => recipe.isFestive && recipe.festival === selectedFestival);
     }
 
     if (selectedMeal) {
@@ -142,16 +139,32 @@ export default function Explore() {
     }
 
     if (selectedDifficulty) {
-      const difficulty = difficultyLevels.find(d => d.name === selectedDifficulty);
-      if (difficulty) {
-        filtered = filtered.filter(recipe => difficulty.recipes.includes(recipe.id));
-      }
+      filtered = filtered.filter(recipe => recipe.difficulty === selectedDifficulty);
     }
 
     if (selectedDiet) {
       const diet = dietTypes.find(d => d.name === selectedDiet);
       if (diet) {
-        filtered = filtered.filter(recipe => diet.recipes.includes(recipe.id));
+        // Filter based on diet type
+        switch (diet.type) {
+          case 'Veg':
+            filtered = filtered.filter(recipe => recipe.dietType.includes('Veg'));
+            break;
+          case 'Vegan':
+            filtered = filtered.filter(recipe => recipe.dietType.includes('Vegan'));
+            break;
+          case 'Non-Veg':
+            filtered = filtered.filter(recipe => recipe.dietType.includes('Non-Veg'));
+            break;
+          case 'Gluten-Free':
+            filtered = filtered.filter(recipe => recipe.dietType.includes('Gluten-Free'));
+            break;
+          case 'Dairy-Free':
+            filtered = filtered.filter(recipe => recipe.dietType.includes('Dairy-Free'));
+            break;
+          default:
+            break;
+        }
       }
     }
 
@@ -195,7 +208,7 @@ export default function Explore() {
     // Fallback to state-based filtering
     const locationData = locationBasedSuggestions[userLocation as keyof typeof locationBasedSuggestions];
     if (!locationData) return [];
-    return mockRecipes.filter(recipe => locationData.recipes.includes(recipe.id));
+    return mockRecipes.filter(recipe => recipe.state === userLocation);
   };
 
   const getFestiveRecipes = () => {
@@ -282,7 +295,7 @@ export default function Explore() {
   const getRecipesByQuickCategory = (category: string): Recipe[] => {
     switch (category) {
       case 'Quick Meals':
-        return mockRecipes.filter(recipe => recipe.cookTime <= 30);
+        return mockRecipes.filter(recipe => recipe.cookingTime <= 30);
       case 'Healthy Desi':
         return mockRecipes.filter(recipe => recipe.isHealthy);
       case 'Street Food':
