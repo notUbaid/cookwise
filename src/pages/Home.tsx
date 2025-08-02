@@ -97,7 +97,7 @@ export default function Home() {
                 Explore Recipes
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="btn-glass">
+            <Button asChild size="lg" className="btn-premium">
               <Link to="/reverse-cooking">
                 <Sparkles className="mr-2 h-5 w-5" />
                 Reverse Cooking

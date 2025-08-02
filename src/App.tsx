@@ -9,7 +9,6 @@ import Search from "./pages/Search";
 import Recipe from "./pages/Recipe";
 import Explore from "./pages/Explore";
 import ReverseCooking from "./pages/ReverseCooking";
-import Leftovers from "./pages/Leftovers";
 import MealPlan from "./pages/MealPlan";
 import GuidedCooking from "./pages/GuidedCooking";
 import Quiz from "./pages/Quiz";
@@ -32,7 +31,6 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/reverse-cooking" element={<ReverseCooking />} />
-          <Route path="/leftovers" element={<Leftovers />} />
           <Route path="/meal-plan" element={<MealPlan />} />
           <Route path="/recipe/:id" element={<Recipe />} />
           <Route path="/recipe/:id/cook" element={<GuidedCooking />} />

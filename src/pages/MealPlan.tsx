@@ -169,7 +169,7 @@ export default function MealPlan() {
   const [error, setError] = useState<string | null>(null);
   
   // User preferences
-  const [calories, setCalories] = useState(2000);
+  const [calories, setCalories] = useState(2300);
   const [selectedDiet, setSelectedDiet] = useState('balanced');
   const [selectedHealthLabels, setSelectedHealthLabels] = useState<string[]>([]);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
@@ -269,6 +269,13 @@ export default function MealPlan() {
     const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const mealTypes = ['breakfast', 'lunch', 'dinner'];
     
+    // Define calorie targets for each meal type to reach daily target
+    const mealCalorieTargets = {
+      breakfast: Math.round(calories * 0.25), // 25% of daily calories
+      lunch: Math.round(calories * 0.35),     // 35% of daily calories
+      dinner: Math.round(calories * 0.40)     // 40% of daily calories
+    };
+    
     const week: any = {};
     
     weekDays.forEach(day => {
@@ -286,14 +293,28 @@ export default function MealPlan() {
           return true;
         });
         
-        const randomRecipe = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)] || availableRecipes[0];
-        const mockMeal = createMockMeal(randomRecipe);
+        // If no specific meal type recipes, use any recipe
+        const recipesToChooseFrom = filteredRecipes.length > 0 ? filteredRecipes : availableRecipes;
+        const randomRecipe = recipesToChooseFrom[Math.floor(Math.random() * recipesToChooseFrom.length)] || availableRecipes[0];
+        
+        // Adjust recipe calories to match meal target
+        const adjustedRecipe = {
+          ...randomRecipe,
+          calories: mealCalorieTargets[mealType as keyof typeof mealCalorieTargets],
+          macros: {
+            protein: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.15 / 4), // 15% protein
+            fat: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.25 / 9),    // 25% fat
+            carbs: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.60 / 4)  // 60% carbs
+          }
+        };
+        
+        const mockMeal = createMockMeal(adjustedRecipe);
         dayMeals.push(mockMeal);
         
-        totalCalories += randomRecipe.calories;
-        totalProtein += randomRecipe.macros.protein;
-        totalFat += randomRecipe.macros.fat;
-        totalCarbs += randomRecipe.macros.carbs;
+        totalCalories += adjustedRecipe.calories;
+        totalProtein += adjustedRecipe.macros.protein;
+        totalFat += adjustedRecipe.macros.fat;
+        totalCarbs += adjustedRecipe.macros.carbs;
       });
       
       week[day] = {
@@ -389,12 +410,12 @@ export default function MealPlan() {
                   type="number"
                   value={calories}
                   onChange={(e) => setCalories(Number(e.target.value))}
-                  min="1200"
-                  max="4000"
+                  min="1800"
+                  max="3500"
                   step="100"
                   className="w-32"
                 />
-                <span className="text-sm text-muted-foreground">calories per day</span>
+                <span className="text-sm text-muted-foreground">calories per day (2200-2500 recommended)</span>
               </div>
             </div>
 

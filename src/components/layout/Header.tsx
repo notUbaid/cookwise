@@ -3,19 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, ChefHat, Search, BookOpen, Users, Heart, Compass, Utensils, Settings as SettingsIcon, Lightbulb } from 'lucide-react';
+import { Menu, ChefHat, Search, BookOpen, Users, Heart, Compass, Utensils, Settings as SettingsIcon } from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/', icon: ChefHat },
   { name: 'Search', href: '/search', icon: Search },
   { name: 'Explore', href: '/explore', icon: Compass },
   { name: 'Reverse Cook', href: '/reverse-cooking', icon: Utensils },
-  { name: 'Leftovers', href: '/leftovers', icon: Lightbulb },
-  { name: 'Meal Plan', href: '/meal-plan', icon: Utensils }, // Use a more appropriate icon
+  { name: 'Meal Plan', href: '/meal-plan', icon: BookOpen },
   { name: 'Quiz', href: '/quiz', icon: Users },
   { name: 'Saved', href: '/saved', icon: Heart },
   { name: 'Settings', href: '/settings', icon: SettingsIcon },
-  // Removed Offline and any unused nav items
 ];
 
 export function Header() {
