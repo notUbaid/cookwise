@@ -54,6 +54,7 @@ export default function ShuffleRecipe() {
   const [randomRecipe, setRandomRecipe] = useState<RandomRecipe | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [useAPI, setUseAPI] = useState(true);
   const { toast } = useToast();
 
   const fetchRandomRecipe = async () => {
@@ -61,42 +62,176 @@ export default function ShuffleRecipe() {
     setRandomRecipe(null);
 
     try {
-      const apiKey = 'e24c011006b64874b7e968b89f5ddffe';
-      const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=1&addRecipeInformation=true&fillIngredients=true&includeNutrition=true`;
+      // Only try Spoonacular API if enabled
+      if (useAPI) {
+        const apiKey = 'e24c011006b64874b7e968b89f5ddffe';
+        const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=1&addRecipeInformation=true&fillIngredients=true&includeNutrition=true`;
 
-      console.log('Fetching random recipe from Spoonacular...');
+        console.log('Fetching random recipe from Spoonacular...');
       
-      const response = await fetch(url);
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log('Spoonacular random recipe response:', data);
-
-      if (data.recipes && data.recipes.length > 0) {
-        const recipe = data.recipes[0];
-        setRandomRecipe(recipe);
-        
-        // Check if recipe is already saved
-        setIsSaved(isFavorite(recipe.id.toString()));
-        
-        toast({
-          title: "🎲 Feeling Lucky!",
-          description: `Here's a random recipe: ${recipe.title}`,
+      try {
+        const response = await fetch(url, {
+          signal: controller.signal
         });
-      } else {
-        throw new Error('No recipes returned from API');
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          if (response.status === 402) {
+            throw new Error('API quota exceeded');
+          } else if (response.status === 404) {
+            throw new Error('API endpoint not found');
+          } else {
+            throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+          }
+        }
+
+        const data = await response.json();
+        console.log('Spoonacular random recipe response:', data);
+
+        if (data.recipes && data.recipes.length > 0) {
+          const recipe = data.recipes[0];
+          setRandomRecipe(recipe);
+          
+          // Check if recipe is already saved
+          setIsSaved(isFavorite(recipe.id.toString()));
+          
+          toast({
+            title: "🎲 Feeling Lucky!",
+            description: `Here's a random recipe: ${recipe.title}`,
+          });
+          return; // Success, exit early
+        } else {
+          throw new Error('No recipes returned from API');
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        console.log('Spoonacular API failed, trying local recipes:', fetchError);
+        throw fetchError; // Re-throw to trigger fallback
       }
 
     } catch (error) {
       console.error('Error fetching random recipe:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch random recipe. Please try again.",
-        variant: "destructive",
-      });
+      
+      // Fallback to local recipes
+      try {
+        console.log('Using local recipe fallback...');
+        const localRecipes = [
+          {
+            id: 1,
+            title: "Chicken Tikka Masala",
+            image: "/hackimage/chetinad chicken.jpg",
+            readyInMinutes: 45,
+            servings: 4,
+            cuisines: ["Indian"],
+            dishTypes: ["main course"],
+            diets: ["non-vegetarian"],
+            nutrition: {
+              nutrients: [{ name: "Calories", amount: 450, unit: "kcal" }]
+            },
+            summary: "A creamy and flavorful Indian curry with tender chicken pieces in a rich tomato-based sauce.",
+            instructions: "1. Marinate chicken with spices\n2. Cook chicken until golden\n3. Prepare sauce with tomatoes and cream\n4. Combine and simmer",
+            analyzedInstructions: [{
+              name: "Chicken Tikka Masala",
+              steps: [
+                {
+                  number: 1,
+                  step: "Marinate chicken with yogurt and spices",
+                  ingredients: [{ id: 1, name: "chicken", localizedName: "chicken", image: "" }]
+                },
+                {
+                  number: 2,
+                  step: "Cook chicken until golden brown",
+                  ingredients: [{ id: 2, name: "oil", localizedName: "oil", image: "" }]
+                }
+              ]
+            }]
+          },
+          {
+            id: 2,
+            title: "Vegetable Biryani",
+            image: "/hackimage/hyderabadibiryani.jpg",
+            readyInMinutes: 60,
+            servings: 6,
+            cuisines: ["Indian"],
+            dishTypes: ["main course"],
+            diets: ["vegetarian"],
+            nutrition: {
+              nutrients: [{ name: "Calories", amount: 380, unit: "kcal" }]
+            },
+            summary: "Aromatic rice dish with mixed vegetables and fragrant spices.",
+            instructions: "1. Cook basmati rice\n2. Prepare vegetable mixture\n3. Layer rice and vegetables\n4. Steam until done",
+            analyzedInstructions: [{
+              name: "Vegetable Biryani",
+              steps: [
+                {
+                  number: 1,
+                  step: "Cook basmati rice until 70% done",
+                  ingredients: [{ id: 3, name: "basmati rice", localizedName: "basmati rice", image: "" }]
+                },
+                {
+                  number: 2,
+                  step: "Prepare vegetable mixture with spices",
+                  ingredients: [{ id: 4, name: "mixed vegetables", localizedName: "mixed vegetables", image: "" }]
+                }
+              ]
+            }]
+          },
+          {
+            id: 3,
+            title: "Masala Dosa",
+            image: "/hackimage/dosa.jpg",
+            readyInMinutes: 30,
+            servings: 2,
+            cuisines: ["South Indian"],
+            dishTypes: ["breakfast"],
+            diets: ["vegetarian"],
+            nutrition: {
+              nutrients: [{ name: "Calories", amount: 280, unit: "kcal" }]
+            },
+            summary: "Crispy fermented rice and lentil crepe served with potato filling.",
+            instructions: "1. Prepare dosa batter\n2. Make potato filling\n3. Spread batter on hot griddle\n4. Fill and fold",
+            analyzedInstructions: [{
+              name: "Masala Dosa",
+              steps: [
+                {
+                  number: 1,
+                  step: "Spread dosa batter on hot griddle",
+                  ingredients: [{ id: 5, name: "dosa batter", localizedName: "dosa batter", image: "" }]
+                },
+                {
+                  number: 2,
+                  step: "Add potato filling and fold",
+                  ingredients: [{ id: 6, name: "potato filling", localizedName: "potato filling", image: "" }]
+                }
+              ]
+            }]
+          }
+        ];
+        
+        const randomIndex = Math.floor(Math.random() * localRecipes.length);
+        const fallbackRecipe = localRecipes[randomIndex];
+        
+        setRandomRecipe(fallbackRecipe);
+        setIsSaved(isFavorite(fallbackRecipe.id.toString()));
+        
+        toast({
+          title: "🎲 Local Recipe Found!",
+          description: `Here's a delicious recipe: ${fallbackRecipe.title}`,
+        });
+        
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+        toast({
+          title: "Error",
+          description: "Unable to load recipes. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -162,6 +297,29 @@ export default function ShuffleRecipe() {
 
   return (
     <div className="space-y-6">
+      {/* API Toggle */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl border border-blue-500/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <ExternalLink className="h-4 w-4 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Online Recipe Database</p>
+              <p className="text-xs text-muted-foreground">Get recipes from Spoonacular API</p>
+            </div>
+          </div>
+          <Button
+            variant={useAPI ? "default" : "outline"}
+            size="sm"
+            className="btn-shimmer"
+            onClick={() => setUseAPI(!useAPI)}
+          >
+            {useAPI ? "ON" : "OFF"}
+          </Button>
+        </div>
+      </div>
+
       {/* Shuffle Button */}
       <div className="text-center">
         <Button
@@ -183,7 +341,7 @@ export default function ShuffleRecipe() {
           )}
         </Button>
         <p className="text-sm text-muted-foreground mt-2">
-          Discover a random recipe from around the world
+          {useAPI ? "Discover recipes from around the world" : "Discover local recipes"}
         </p>
       </div>
 

@@ -11,6 +11,7 @@ if ('serviceWorker' in navigator) {
       })
       .catch((registrationError) => {
         console.log('SW registration failed: ', registrationError);
+        // Don't show error to user, just log it
       });
   });
 }

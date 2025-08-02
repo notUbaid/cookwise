@@ -23,6 +23,16 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache if available
 self.addEventListener('fetch', (event) => {
+  // Skip caching for API requests and external resources
+  if (event.request.url.includes('api.spoonacular.com') || 
+      event.request.url.includes('localhost:5000') ||
+      event.request.url.includes('cookwise.vercel.app/api') ||
+      event.request.url.includes('chrome-extension') ||
+      event.request.url.includes('data:') ||
+      event.request.url.includes('blob:')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
