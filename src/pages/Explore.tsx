@@ -52,6 +52,9 @@ export default function Explore() {
   const [selectedState, setSelectedState] = useState<string>('');
   const [stateRecipes, setStateRecipes] = useState<Recipe[]>([]);
   const [stateSearchQuery, setStateSearchQuery] = useState<string>('');
+  const [selectedFestivalView, setSelectedFestivalView] = useState<string>('');
+  const [festivalRecipes, setFestivalRecipes] = useState<Recipe[]>([]);
+  const [festivalSearchQuery, setFestivalSearchQuery] = useState<string>('');
 
   useEffect(() => {
     // Load saved recipes from localStorage
@@ -73,6 +76,15 @@ export default function Explore() {
       setStateRecipes([]);
     }
   }, [selectedState]);
+
+  useEffect(() => {
+    if (selectedFestivalView) {
+      const recipes = getRecipesByFestival(selectedFestivalView);
+      setFestivalRecipes(recipes);
+    } else {
+      setFestivalRecipes([]);
+    }
+  }, [selectedFestivalView]);
 
   const detectUserLocation = () => {
     // Get user location from localStorage
@@ -175,6 +187,20 @@ export default function Explore() {
     return mockRecipes.filter(recipe => recipe.state === stateName);
   };
 
+  const getRecipesByFestival = (festivalName: string): Recipe[] => {
+    return mockRecipes.filter(recipe => recipe.isFestive && recipe.festival === festivalName);
+  };
+
+  const getFilteredFestivals = () => {
+    if (festivalSearchQuery) {
+      return festivalCategories.filter(festival => 
+        festival.name.toLowerCase().includes(festivalSearchQuery.toLowerCase()) ||
+        festival.festival.toLowerCase().includes(festivalSearchQuery.toLowerCase())
+      );
+    }
+    return festivalCategories;
+  };
+
   const getStatesByRegion = (region: string) => {
     const states = indianStates.filter(state => state.region === region);
     if (stateSearchQuery) {
@@ -196,10 +222,19 @@ export default function Explore() {
     setSelectedState(stateName);
   };
 
+  const handleFestivalClick = (festivalName: string) => {
+    setSelectedFestivalView(festivalName);
+  };
+
   const clearStateSelection = () => {
     setSelectedState('');
     setSelectedRegion('');
     setStateSearchQuery('');
+  };
+
+  const clearFestivalSelection = () => {
+    setSelectedFestivalView('');
+    setFestivalSearchQuery('');
   };
 
   return (
@@ -601,41 +636,138 @@ export default function Explore() {
             <Calendar className="h-6 w-6 text-primary" />
             <h2 className="text-2xl font-serif font-bold">Festive Favorites</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {festivalCategories.map(festival => (
-              <Card key={festival.name} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="text-xl font-serif flex items-center gap-2">
-                    <span>{festival.icon}</span>
-                    {festival.name}
-                  </CardTitle>
+          
+          {selectedFestivalView ? (
+            // Show selected festival's dishes
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <Button 
+                  variant="outline" 
+                  onClick={clearFestivalSelection}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Festivals
+                </Button>
+                <div>
+                  <h3 className="text-xl font-serif font-bold flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    {selectedFestivalView} Specials
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    Traditional recipes for {festival.festival} celebrations
+                    {festivalRecipes.length} traditional dishes for {selectedFestivalView} celebrations
                   </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm font-medium">Recipes:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {festival.recipes.slice(0, 2).map(recipe => (
-                          <Badge key={recipe.id} variant="secondary" className="text-xs">
-                            {recipe.title}
+                </div>
+              </div>
+              
+              {festivalRecipes.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {festivalRecipes.map(recipe => (
+                    <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                      <RecipeCard
+                        recipe={recipe}
+                        onSave={handleSaveRecipe}
+                        isSaved={savedRecipes.includes(recipe.id)}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No recipes found</h3>
+                  <p className="text-muted-foreground">
+                    We're working on adding more recipes for {selectedFestivalView} celebrations
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            // Show all festivals
+            <div>
+              {/* Search Festivals */}
+              <div className="mb-6">
+                <div className="relative max-w-md">
+                  <input
+                    type="text"
+                    placeholder="Search festivals..."
+                    value={festivalSearchQuery}
+                    onChange={(e) => setFestivalSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                </div>
+                {festivalSearchQuery && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Found {getFilteredFestivals().length} festivals matching "{festivalSearchQuery}"
+                  </p>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getFilteredFestivals().map(festival => {
+                const festivalRecipes = getRecipesByFestival(festival.name);
+                return (
+                  <Card 
+                    key={festival.name} 
+                    className="hover:shadow-lg transition-shadow cursor-pointer group"
+                    onClick={() => handleFestivalClick(festival.name)}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-xl font-serif flex items-center gap-2">
+                        <span>{festival.icon}</span>
+                        {festival.name}
+                      </CardTitle>
+                      <p className="text-muted-foreground text-sm">
+                        Traditional recipes for {festival.festival} celebrations
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div>
+                          <span className="text-sm font-medium">Available Recipes:</span>
+                          <Badge 
+                            variant={festivalRecipes.length > 3 ? "default" : "secondary"} 
+                            className="text-xs ml-2"
+                          >
+                            {festivalRecipes.length} recipes
                           </Badge>
-                        ))}
+                          {festivalRecipes.length > 5 && (
+                            <Badge variant="destructive" className="text-xs ml-1">
+                              Popular!
+                            </Badge>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium">Festival:</span>
+                          <Badge variant="outline" className="text-xs ml-1">
+                            {festival.festival}
+                          </Badge>
+                        </div>
+                        {festivalRecipes.length > 0 && (
+                          <div>
+                            <span className="text-sm font-medium">Popular Dishes:</span>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {festivalRecipes.slice(0, 2).map(recipe => (
+                                <Badge key={recipe.id} variant="secondary" className="text-xs">
+                                  {recipe.title}
+                                </Badge>
+                              ))}
+                              {festivalRecipes.length > 2 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{festivalRecipes.length - 2} more
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <div>
-                      <span className="text-sm font-medium">Festival:</span>
-                      <Badge variant="outline" className="text-xs ml-1">
-                        {festival.festival}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* Trending Recipes */}
