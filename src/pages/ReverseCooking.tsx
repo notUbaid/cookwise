@@ -636,14 +636,52 @@ export default function ReverseCooking() {
             <Card className="card-premium h-full flex flex-col">
               <CardHeader className="pb-4 flex-shrink-0">
                 <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 bg-primary/10 rounded-lg">
+                  <div className="p-2 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg">
                     <Utensils className="h-6 w-6 text-primary" />
                   </div>
-                  What do you have?
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span>What do you have?</span>
+                      {selectedIngredients.length > 0 || selectedLeftovers.length > 0 ? (
+                        <Badge variant="secondary" className="ml-2">
+                          {selectedIngredients.length + selectedLeftovers.length} selected
+                        </Badge>
+                      ) : null}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Select your ingredients and leftovers to find perfect recipes
+                    </p>
+                  </div>
                 </CardTitle>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Select your ingredients and leftovers to find perfect recipes
-                </p>
+                {(selectedIngredients.length > 0 || selectedLeftovers.length > 0) && (
+                  <div className="mt-4 flex items-center gap-2">
+                    <Button
+                      onClick={findRecipes}
+                      disabled={isLoading}
+                      className="btn-shimmer flex-1"
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Finding Recipes...
+                        </>
+                      ) : (
+                        <>
+                          <Search className="h-4 w-4 mr-2" />
+                          Find Recipes
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={clearSelection}
+                      variant="outline"
+                      size="sm"
+                      className="btn-shimmer"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
                   {/* ML API Toggle */}
@@ -694,19 +732,22 @@ export default function ReverseCooking() {
 
                       {/* Selected Ingredients */}
                       {selectedIngredients.length > 0 && (
-                        <div>
-                          <h3 className="text-sm font-medium mb-2">Selected Ingredients:</h3>
+                        <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
+                          <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            Selected Ingredients ({selectedIngredients.length})
+                          </h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedIngredients.map(ingredient => (
                               <Badge 
                                 key={ingredient} 
                                 variant="secondary"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors"
                               >
                                 {ingredient}
                                 <button
                                   onClick={() => handleIngredientRemove(ingredient)}
-                                  className="ml-1 hover:text-destructive"
+                                  className="ml-1 hover:text-destructive transition-colors"
                                 >
                                   <X className="h-3 w-3" />
                                 </button>
@@ -750,6 +791,9 @@ export default function ReverseCooking() {
                                     }}
                                   >
                                     {ingredient.name}
+                                    {selectedIngredients.includes(ingredient.name) && (
+                                      <CheckCircle className="h-3 w-3 ml-1" />
+                                    )}
                                   </button>
                                 ))}
                             </div>
@@ -772,19 +816,22 @@ export default function ReverseCooking() {
 
                       {/* Selected Leftovers */}
                       {selectedLeftovers.length > 0 && (
-                        <div>
-                          <h3 className="text-sm font-medium mb-2">Selected Leftovers:</h3>
+                        <div className="p-3 bg-accent/5 rounded-lg border border-accent/10">
+                          <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                            <Lightbulb className="h-4 w-4 text-orange-600" />
+                            Selected Leftovers ({selectedLeftovers.length})
+                          </h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedLeftovers.map(leftover => (
                               <Badge 
                                 key={leftover} 
                                 variant="secondary"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 bg-accent/10 text-accent-foreground border-accent/20 hover:bg-accent/20 transition-colors"
                               >
                                 {leftover}
                                 <button
                                   onClick={() => handleLeftoverRemove(leftover)}
-                                  className="ml-1 hover:text-destructive"
+                                  className="ml-1 hover:text-destructive transition-colors"
                                 >
                                   <X className="h-3 w-3" />
                                 </button>
@@ -818,6 +865,9 @@ export default function ReverseCooking() {
                                     }`}
                                   >
                                     <span>{item}</span>
+                                    {selectedLeftovers.includes(item) && (
+                                      <CheckCircle className="h-3 w-3 ml-1" />
+                                    )}
                                   </button>
                                 ))}
                             </div>
