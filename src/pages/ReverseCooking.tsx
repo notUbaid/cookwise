@@ -713,6 +713,58 @@ export default function ReverseCooking() {
               </Card>
           </div>
 
+          {/* Tips Section - Moved to better position */}
+          <div className="lg:col-span-3 mb-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" />
+                  Reverse Cooking Tips
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <ChefHat className="h-4 w-4" />
+                      Smart Ingredient Selection
+                    </h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Start with staple ingredients like rice, onions, tomatoes</li>
+                      <li>• Add proteins like chicken, fish, or paneer</li>
+                      <li>• Include spices and herbs for authentic flavors</li>
+                      <li>• Don't forget cooking essentials like oil and salt</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4" />
+                      Creative Leftover Ideas
+                    </h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Leftover rice → Fried rice or rice pudding</li>
+                      <li>• Extra roti → Roti chips or roti upma</li>
+                      <li>• Cooked dal → Dal paratha or dal soup</li>
+                      <li>• Vegetable scraps → Vegetable stock</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <Zap className="h-4 w-4" />
+                      Recipe Matching
+                    </h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• More ingredients = better recipe matches</li>
+                      <li>• Recipes are ranked by ingredient compatibility</li>
+                      <li>• Check leftover suggestions for creative uses</li>
+                      <li>• Save your favorite recipes for later</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Right Column - Recipe Suggestions */}
           <div className="lg:col-span-2 h-full overflow-y-auto">
             {(selectedIngredients.length === 0 && selectedLeftovers.length === 0) ? (
@@ -912,57 +964,7 @@ export default function ReverseCooking() {
           </div>
         </div>
 
-        {/* Tips Section */}
-        <section className="mt-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                Reverse Cooking Tips
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h4 className="font-semibold mb-2 flex items-center gap-2">
-                    <ChefHat className="h-4 w-4" />
-                    Smart Ingredient Selection
-                  </h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Start with staple ingredients like rice, onions, tomatoes</li>
-                    <li>• Add proteins like chicken, fish, or paneer</li>
-                    <li>• Include spices and herbs for authentic flavors</li>
-                    <li>• Don't forget cooking essentials like oil and salt</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2 flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    Creative Leftover Ideas
-                  </h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Leftover rice → Fried rice or rice pudding</li>
-                    <li>• Extra roti → Roti chips or roti upma</li>
-                    <li>• Cooked dal → Dal paratha or dal soup</li>
-                    <li>• Vegetable scraps → Vegetable stock</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2 flex items-center gap-2">
-                    <Zap className="h-4 w-4" />
-                    Recipe Matching
-                  </h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• More ingredients = better recipe matches</li>
-                    <li>• Recipes are ranked by ingredient compatibility</li>
-                    <li>• Check leftover suggestions for creative uses</li>
-                    <li>• Save your favorite recipes for later</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+
       </div>
     </div>
   );
