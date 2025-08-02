@@ -1,15 +1,25 @@
 /* Zapier Chatbot Styles */
 .zapier-chatbot-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 9999 !important;
   pointer-events: none; /* Allow clicks to pass through to the chatbot */
 }
 
 /* Ensure the chatbot element itself can receive interactions */
 .zapier-chatbot-container zapier-interfaces-chatbot-embed {
-  pointer-events: auto;
+  pointer-events: auto !important;
+}
+
+/* Force the chatbot to be visible */
+.zapier-chatbot-container * {
+  pointer-events: auto !important;
+}
+
+/* Fallback chatbot button */
+.zapier-chatbot-fallback {
+  pointer-events: auto !important;
 }
 
 /* Loading state styles */

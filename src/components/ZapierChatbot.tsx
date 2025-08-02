@@ -77,15 +77,25 @@ const ZapierChatbot: React.FC<ZapierChatbotProps> = ({
   // Show error state if script failed to load
   if (scriptError) {
     console.warn('Zapier chatbot failed to load:', scriptError);
-    return null; // Don't render anything if script failed
+    // Still render the container even if script fails, so we can show a fallback
   }
 
   return (
     <div className={`zapier-chatbot-container ${className}`}>
-      <zapier-interfaces-chatbot-embed 
-        is-popup={isPopup.toString()} 
-        chatbot-id={chatbotId}
-      />
+      {scriptLoaded && !scriptError ? (
+        <zapier-interfaces-chatbot-embed 
+          is-popup={isPopup.toString()} 
+          chatbot-id={chatbotId}
+        />
+      ) : (
+        <div className="zapier-chatbot-fallback">
+          <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-primary/90 transition-colors">
+            <svg className="w-6 h-6 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

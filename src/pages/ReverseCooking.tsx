@@ -507,21 +507,20 @@ export default function ReverseCooking() {
       </section>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-200px)]">
           {/* Left Column - Selection Panel */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4">
-              <Card className="max-h-[calc(100vh-200px)] overflow-hidden">
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-2">
-                    <Utensils className="h-5 w-5" />
-                    What do you have?
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Select your ingredients and leftovers to find perfect recipes
-                  </p>
-                </CardHeader>
-                <CardContent className="overflow-y-auto space-y-4 pr-2" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+          <div className="lg:col-span-1 h-full">
+            <Card className="h-full flex flex-col">
+              <CardHeader className="pb-4 flex-shrink-0">
+                <CardTitle className="flex items-center gap-2">
+                  <Utensils className="h-5 w-5" />
+                  What do you have?
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Select your ingredients and leftovers to find perfect recipes
+                </p>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
                   {/* API Toggle */}
                   <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                     <div>
@@ -712,11 +711,10 @@ export default function ReverseCooking() {
                   )}
                 </CardContent>
               </Card>
-            </div>
           </div>
 
           {/* Right Column - Recipe Suggestions */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 h-full overflow-y-auto">
             {(selectedIngredients.length === 0 && selectedLeftovers.length === 0) ? (
               /* Empty State */
               <Card className="text-center py-12">
