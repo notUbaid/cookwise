@@ -595,25 +595,37 @@ export default function ReverseCooking() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header Section */}
-      <section className="relative py-16 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-95"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
         <div className="relative container mx-auto text-center text-primary-foreground">
-          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6">
-            Reverse Cooking
-          </h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
-            Transform your ingredients and leftovers into delicious meals. Our smart recipe finder helps you create amazing dishes from what you have.
-          </p>
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="flex items-center gap-2">
-              <ChefHat className="h-6 w-6" />
-              <span>Ingredient-based recipes</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Lightbulb className="h-6 w-6" />
-              <span>Leftover transformations</span>
+          <div className="mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-4">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">AI-Powered Recipe Discovery</span>
             </div>
           </div>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 float">
+            Reverse Cooking
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto opacity-95 leading-relaxed">
+            Transform your ingredients and leftovers into delicious meals. Our smart recipe finder helps you create amazing dishes from what you have.
+          </p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-8">
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <ChefHat className="h-5 w-5" />
+              <span className="font-medium">Ingredient-based recipes</span>
+            </div>
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Lightbulb className="h-5 w-5" />
+              <span className="font-medium">Leftover transformations</span>
+            </div>
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Zap className="h-5 w-5" />
+              <span className="font-medium">Smart recommendations</span>
+            </div>
+          </div>
+          <div className="w-32 h-1 bg-white/30 rounded-full mx-auto"></div>
         </div>
       </section>
 
@@ -621,26 +633,34 @@ export default function ReverseCooking() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-200px)]">
           {/* Left Column - Selection Panel */}
           <div className="lg:col-span-1 h-full">
-            <Card className="h-full flex flex-col">
+            <Card className="card-premium h-full flex flex-col">
               <CardHeader className="pb-4 flex-shrink-0">
-                <CardTitle className="flex items-center gap-2">
-                  <Utensils className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Utensils className="h-6 w-6 text-primary" />
+                  </div>
                   What do you have?
                 </CardTitle>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground mt-2">
                   Select your ingredients and leftovers to find perfect recipes
                 </p>
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
                   {/* ML API Toggle */}
-                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <div>
-                      <p className="text-sm font-medium">Use ML-Powered Recommendations</p>
-                      <p className="text-xs text-muted-foreground">Get personalized suggestions using quiz data & location</p>
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Zap className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">ML-Powered Recommendations</p>
+                        <p className="text-xs text-muted-foreground">Personalized suggestions using quiz data & location</p>
+                      </div>
                     </div>
                     <Button
                       variant={useMLApi ? "default" : "outline"}
                       size="sm"
+                      className={`btn-shimmer ${useMLApi ? 'pulse-glow' : ''}`}
                       onClick={() => setUseMLApi(!useMLApi)}
                     >
                       {useMLApi ? "ON" : "OFF"}
@@ -662,13 +682,13 @@ export default function ReverseCooking() {
 
                     <TabsContent value="ingredients" className="space-y-4">
                       {/* Search */}
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <div className="search-modern">
+                        <Search className="search-icon h-4 w-4" />
                         <Input
                           placeholder="Search ingredients..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-10"
+                          className="input-modern"
                         />
                       </div>
 
@@ -718,10 +738,8 @@ export default function ReverseCooking() {
                                       handleIngredientSelect(ingredient.name);
                                     }}
                                     disabled={selectedIngredients.includes(ingredient.name)}
-                                    className={`px-2 py-1 rounded-md text-xs border transition-colors ${
-                                      selectedIngredients.includes(ingredient.name)
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-background hover:bg-muted'
+                                    className={`ingredient-btn-modern ${
+                                      selectedIngredients.includes(ingredient.name) ? 'selected' : ''
                                     }`}
                                     style={{ 
                                       fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -742,13 +760,13 @@ export default function ReverseCooking() {
 
                     <TabsContent value="leftovers" className="space-y-4">
                       {/* Search */}
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <div className="search-modern">
+                        <Search className="search-icon h-4 w-4" />
                         <Input
                           placeholder="Search leftovers..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-10"
+                          className="input-modern"
                         />
                       </div>
 
@@ -795,10 +813,8 @@ export default function ReverseCooking() {
                                     key={item}
                                     onClick={() => handleLeftoverSelect(item)}
                                     disabled={selectedLeftovers.includes(item)}
-                                    className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs border transition-colors ${
-                                      selectedLeftovers.includes(item)
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-background hover:bg-muted'
+                                    className={`ingredient-btn-modern ${
+                                      selectedLeftovers.includes(item) ? 'selected' : ''
                                     }`}
                                   >
                                     <span>{item}</span>
@@ -817,7 +833,7 @@ export default function ReverseCooking() {
                       variant="outline" 
                       size="sm" 
                       onClick={clearSelection}
-                      className="w-full"
+                      className="w-full btn-shimmer"
                     >
                       <RefreshCw className="mr-2 h-4 w-4" />
                       Clear All

@@ -21,15 +21,18 @@ export function Header() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/60 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center space-x-2">
-          <img src="/cookwise.jpeg" alt="CookWise Logo" className="h-8 w-8 rounded-full shadow-md border border-primary object-cover" />
-          <span className="text-2xl font-serif font-bold gradient-text">CookWise</span>
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="relative">
+            <img src="/cookwise.jpeg" alt="CookWise Logo" className="h-10 w-10 rounded-xl shadow-lg border border-primary/20 object-cover group-hover:scale-110 transition-transform duration-300" />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+          <span className="text-2xl font-serif font-bold gradient-text group-hover:scale-105 transition-transform duration-300">CookWise</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden md:flex items-center space-x-2">
           {navigation.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.href;
@@ -37,9 +40,9 @@ export function Header() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+                className={`nav-modern flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-md'
+                    ? 'bg-primary text-primary-foreground shadow-lg pulse-glow'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >

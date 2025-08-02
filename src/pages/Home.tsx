@@ -73,31 +73,41 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>
+      <section className="relative py-24 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-95"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
         <div className="relative container mx-auto text-center text-primary-foreground">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 fade-in">
+          <div className="mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-4">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">AI-Powered Recipe Discovery</span>
+            </div>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 float">
             Discover Authentic
-            <span className="block text-accent-glow">Indian Recipes</span>
+            <span className="block gradient-text">Indian Recipes</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto fade-in opacity-90">
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-95 leading-relaxed">
             From Kashmir to Kerala, explore traditional recipes from every Indian state
           </p>
           {userLocation && (
-            <div className="flex items-center justify-center gap-2 mb-6 fade-in">
-              <span className="text-lg opacity-90">
-                Discovering recipes near {userLocation.city}, {userLocation.state}
-              </span>
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <MapPin className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Discovering recipes near {userLocation.city}, {userLocation.state}
+                </span>
+              </div>
             </div>
           )}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in">
-            <Button asChild size="lg" className="btn-accent">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Button asChild size="lg" className="btn-accent btn-shimmer">
               <Link to="/explore">
                 <TrendingUp className="mr-2 h-5 w-5" />
                 Explore Recipes
               </Link>
             </Button>
-            <Button asChild size="lg" className="btn-premium">
+            <Button asChild size="lg" className="btn-premium btn-shimmer">
               <Link to="/reverse-cooking">
                 <Sparkles className="mr-2 h-5 w-5" />
                 Reverse Cooking

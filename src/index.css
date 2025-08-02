@@ -132,8 +132,38 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
     background: var(--gradient-card);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Modern scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Modern focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
+  }
+
+  /* Modern selection */
+  ::selection {
+    @apply bg-primary/20 text-primary-foreground;
   }
 }
 
@@ -225,5 +255,124 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Modern Glass Morphism */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  /* Modern Button with Shimmer Effect */
+  .btn-shimmer {
+    @apply relative overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .btn-shimmer::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-700;
+  }
+
+  .btn-shimmer:hover::before {
+    @apply translate-x-full;
+  }
+
+  /* Modern Loading Spinner */
+  .spinner-modern {
+    @apply w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin;
+  }
+
+  /* Modern Progress Bar */
+  .progress-modern {
+    @apply h-3 bg-muted rounded-full overflow-hidden;
+  }
+
+  .progress-modern-fill {
+    @apply h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500 ease-out;
+  }
+
+  /* Modern Input Styles */
+  .input-modern {
+    @apply bg-background border border-border/50 rounded-xl px-4 py-3 text-sm transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20;
+  }
+
+  /* Modern Search Bar */
+  .search-modern {
+    @apply relative w-full max-w-md;
+  }
+
+  .search-modern input {
+    @apply w-full pl-10 pr-4 py-3 bg-background border border-border/50 rounded-xl text-sm transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20;
+  }
+
+  .search-modern .search-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground;
+  }
+
+  /* Modern Navigation */
+  .nav-modern {
+    @apply relative overflow-hidden rounded-xl transition-all duration-300 hover:bg-muted/50;
+  }
+
+  .nav-modern::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .nav-modern:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Modern Ingredient Button */
+  .ingredient-btn-modern {
+    @apply relative overflow-hidden rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .ingredient-btn-modern.selected {
+    @apply bg-primary text-primary-foreground shadow-lg;
+    background: var(--gradient-primary);
+  }
+
+  .ingredient-btn-modern:not(.selected) {
+    @apply bg-muted text-muted-foreground hover:bg-muted/80;
+  }
+
+  /* Modern Recipe Card */
+  .recipe-card-modern {
+    @apply relative overflow-hidden rounded-2xl bg-card border border-border/50 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] hover:border-primary/30;
+    background: var(--gradient-card);
+  }
+
+  .recipe-card-modern::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .recipe-card-modern:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Modern Floating Animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Modern Pulse Glow */
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.6); }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Modern Badge */
+  .badge-modern {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 hover:scale-105;
   }
 }

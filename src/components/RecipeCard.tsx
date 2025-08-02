@@ -45,43 +45,43 @@ export function RecipeCard({ recipe, onSave, isSaved = false }: RecipeCardProps)
   };
 
   return (
-    <Card className="recipe-card card-premium group overflow-hidden">
+    <Card className="recipe-card-modern group overflow-hidden">
       <div className="relative overflow-hidden">
         <img
           src={recipe.image}
           alt={recipe.title}
-          className="recipe-image w-full h-48 object-cover transition-transform duration-300"
+          className="recipe-image w-full h-48 object-cover transition-transform duration-500"
         />
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-3 right-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSave}
-            className="bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-all duration-200"
+            className="bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 rounded-xl shadow-lg"
           >
             <Heart 
-              className={`h-4 w-4 transition-colors ${
-                isSaved ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'
+              className={`h-4 w-4 transition-all duration-300 ${
+                isSaved ? 'fill-red-500 text-red-500 scale-110' : 'text-gray-600 hover:text-red-500 hover:scale-110'
               }`} 
             />
           </Button>
         </div>
         {recipe.isOfflineAvailable && (
-          <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
+          <Badge className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-primary-foreground border-0 shadow-lg">
             Offline
           </Badge>
         )}
       </div>
       
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors duration-300">
             {recipe.title}
           </h3>
         </div>
         
-        <div className="flex items-center justify-between mb-2">
-          <Badge variant="secondary" className="badge-cuisine">
+        <div className="flex items-center justify-between mb-3">
+          <Badge variant="secondary" className="badge-modern badge-cuisine">
             {recipe.cuisine} • {recipe.state}
           </Badge>
         </div>
