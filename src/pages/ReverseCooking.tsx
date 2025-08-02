@@ -423,6 +423,21 @@ export default function ReverseCooking() {
     return leftoverCategories.find(category => category.name === categoryName);
   };
 
+  const getCategoryIcon = (category: string) => {
+    const categoryIcons: { [key: string]: string } = {
+      'Grains': '🌾',
+      'Pulses': '🥣',
+      'Vegetables': '🥬',
+      'Spices': '🧂',
+      'Dairy': '🥛',
+      'Oils & Fats': '🛢️',
+      'Proteins': '🍗',
+      'Fruits': '🍎',
+      'Other': '🧂'
+    };
+    return categoryIcons[category] || '🍽️';
+  };
+
   const categories = [...new Set(commonIngredients.map(ingredient => ingredient.category))];
 
   return (
@@ -454,8 +469,8 @@ export default function ReverseCooking() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Selection Panel */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-4">
-              <CardHeader>
+            <Card className="h-[calc(100vh-200px)] overflow-hidden">
+              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2">
                   <Utensils className="h-5 w-5" />
                   What do you have?
@@ -464,7 +479,7 @@ export default function ReverseCooking() {
                   Select your ingredients and leftovers to find perfect recipes
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="h-full overflow-y-auto space-y-4 pr-2">
                 {/* API Toggle */}
                 <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div>
@@ -533,7 +548,10 @@ export default function ReverseCooking() {
                     <div className="space-y-4">
                       {categories.map(category => (
                         <div key={category}>
-                          <h3 className="text-sm font-medium mb-2">{category}</h3>
+                          <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                            {getCategoryIcon(category)}
+                            {category}
+                          </h3>
                           <div className="flex flex-wrap gap-2">
                             {getIngredientCategory(category)
                               .filter(ingredient => 
@@ -545,14 +563,13 @@ export default function ReverseCooking() {
                                   key={ingredient.name}
                                   onClick={() => handleIngredientSelect(ingredient.name)}
                                   disabled={selectedIngredients.includes(ingredient.name)}
-                                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs border transition-colors ${
+                                  className={`px-2 py-1 rounded-md text-xs border transition-colors ${
                                     selectedIngredients.includes(ingredient.name)
                                       ? 'bg-primary text-primary-foreground'
                                       : 'bg-background hover:bg-muted'
                                   }`}
                                 >
-                                  <span>{ingredient.icon}</span>
-                                  <span>{ingredient.name.split(' ')[0]}</span>
+                                  {ingredient.name}
                                 </button>
                               ))}
                           </div>
