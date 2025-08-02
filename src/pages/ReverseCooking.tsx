@@ -236,8 +236,28 @@ export default function ReverseCooking() {
     // Load saved recipes from localStorage
     const saved = JSON.parse(localStorage.getItem('saved-recipes') || '[]');
     setSavedRecipes(saved);
+  }, []);
+
+  useEffect(() => {
+    // Generate local recipes immediately when ingredients change
+    const allSelected = [...selectedIngredients, ...selectedLeftovers];
+    console.log('useEffect triggered with:', allSelected);
     
-    // Find recipes based on selected ingredients/leftovers
+    if (allSelected.length === 0) {
+      console.log('No ingredients selected, clearing recipes');
+      setLocalRecipes([]);
+      setSuggestedRecipes([]);
+      setApiError(null);
+      return;
+    }
+
+    // Generate local recipes immediately for instant feedback
+    console.log('Generating local recipes...');
+    const enhancedRecipes = generateEnhancedRecipes();
+    console.log('Setting local recipes:', enhancedRecipes.length);
+    setLocalRecipes(enhancedRecipes);
+
+    // Then try to fetch API recipes
     findRecipes();
   }, [selectedIngredients, selectedLeftovers]);
 
@@ -245,7 +265,6 @@ export default function ReverseCooking() {
     const allSelected = [...selectedIngredients, ...selectedLeftovers];
     if (allSelected.length === 0) {
       setSuggestedRecipes([]);
-      setLocalRecipes([]);
       setApiError(null);
       return;
     }
@@ -305,9 +324,8 @@ export default function ReverseCooking() {
         }
       }
 
-      // Generate enhanced local recipes
-      const enhancedRecipes = generateEnhancedRecipes();
-      setLocalRecipes(enhancedRecipes);
+      // Note: Local recipes are already generated in the useEffect above
+      // No need to regenerate them here
 
     } catch (error) {
       console.error('Error fetching recipes:', error);
@@ -323,9 +341,7 @@ export default function ReverseCooking() {
       // Clear suggested recipes on error
       setSuggestedRecipes([]);
       
-      // Fallback to enhanced local recipes
-      const enhancedRecipes = generateEnhancedRecipes();
-      setLocalRecipes(enhancedRecipes);
+      // Local recipes are already available from the useEffect
     } finally {
       setIsLoading(false);
     }
@@ -334,69 +350,108 @@ export default function ReverseCooking() {
   const generateEnhancedRecipes = () => {
     const allSelected = [...selectedIngredients, ...selectedLeftovers];
     
+    console.log('Generating recipes for:', allSelected);
+    
     // Filter enhanced reverse recipes based on selected items
     const filteredReverseRecipes = enhancedReverseRecipes.filter(recipe => {
       const recipeIngredients = recipe.ingredients.map(ing => ing.toLowerCase());
       const selectedItems = allSelected.map(item => item.toLowerCase());
       
-      return selectedItems.some(item => 
-        recipeIngredients.some(recipeIng => 
-          recipeIng.includes(item) || item.includes(recipeIng)
-        )
+      // More flexible matching - check if any selected item matches any recipe ingredient
+      return selectedItems.some(selectedItem => 
+        recipeIngredients.some(recipeIng => {
+          // Check for exact match, partial match, or word boundaries
+          return recipeIng.includes(selectedItem) || 
+                 selectedItem.includes(recipeIng) ||
+                 recipeIng.split(' ').some(word => word.includes(selectedItem)) ||
+                 selectedItem.split(' ').some(word => word.includes(recipeIng));
+        })
       );
     });
+
+    console.log('Filtered reverse recipes:', filteredReverseRecipes.length);
 
     // Check leftover recipes for matches
     const leftoverMatches = leftoverRecipes.filter(recipe => {
       const recipeIngredients = recipe.ingredients.map(ing => ing.toLowerCase());
       const selectedItems = allSelected.map(item => item.toLowerCase());
       
-      return selectedItems.some(item => 
-        recipeIngredients.some(recipeIng => 
-          recipeIng.includes(item) || item.includes(recipeIng)
-        )
+      return selectedItems.some(selectedItem => 
+        recipeIngredients.some(recipeIng => {
+          return recipeIng.includes(selectedItem) || 
+                 selectedItem.includes(recipeIng) ||
+                 recipeIng.split(' ').some(word => word.includes(selectedItem)) ||
+                 selectedItem.split(' ').some(word => word.includes(recipeIng));
+        })
       );
     }).map(recipe => ({
       ...recipe,
       type: 'leftover',
       matchScore: allSelected.filter(item => 
         recipe.ingredients.some(ing => 
-          ing.toLowerCase().includes(item.toLowerCase())
+          ing.toLowerCase().includes(item.toLowerCase()) ||
+          item.toLowerCase().includes(ing.toLowerCase()) ||
+          ing.toLowerCase().split(' ').some(word => word.includes(item.toLowerCase())) ||
+          item.toLowerCase().split(' ').some(word => word.includes(ing.toLowerCase()))
         )
       ).length,
       leftoverCompatibility: selectedLeftovers.filter(leftover => 
         recipe.ingredients.some(ing => 
-          ing.toLowerCase().includes(leftover.toLowerCase())
+          ing.toLowerCase().includes(leftover.toLowerCase()) ||
+          leftover.toLowerCase().includes(ing.toLowerCase()) ||
+          ing.toLowerCase().split(' ').some(word => word.includes(leftover.toLowerCase())) ||
+          leftover.toLowerCase().split(' ').some(word => word.includes(ing.toLowerCase()))
         )
       ).length
     }));
 
+    console.log('Leftover matches:', leftoverMatches.length);
+
     // Also check mock recipes for matches
     const mockMatches = mockRecipes.filter(recipe => {
       const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
-      return allSelected.some(item => 
-        recipeIngredients.includes(item.toLowerCase())
-      );
+      return allSelected.some(selectedItem => {
+        const itemLower = selectedItem.toLowerCase();
+        return recipeIngredients.includes(itemLower) ||
+               recipeIngredients.split(' ').some(word => word.includes(itemLower)) ||
+               itemLower.split(' ').some(word => recipeIngredients.includes(word));
+      });
     }).map(recipe => ({
       ...recipe,
       type: 'mock',
-      matchScore: allSelected.filter(item => 
-        recipe.ingredients.join(' ').toLowerCase().includes(item.toLowerCase())
-      ).length,
-      leftoverCompatibility: selectedLeftovers.filter(leftover => 
-        recipe.ingredients.join(' ').toLowerCase().includes(leftover.toLowerCase())
-      ).length
+      matchScore: allSelected.filter(item => {
+        const itemLower = item.toLowerCase();
+        const recipeIngredientsLower = recipe.ingredients.join(' ').toLowerCase();
+        return recipeIngredientsLower.includes(itemLower) ||
+               recipeIngredientsLower.split(' ').some(word => word.includes(itemLower)) ||
+               itemLower.split(' ').some(word => recipeIngredientsLower.includes(word));
+      }).length,
+      leftoverCompatibility: selectedLeftovers.filter(leftover => {
+        const leftoverLower = leftover.toLowerCase();
+        const recipeIngredientsLower = recipe.ingredients.join(' ').toLowerCase();
+        return recipeIngredientsLower.includes(leftoverLower) ||
+               recipeIngredientsLower.split(' ').some(word => word.includes(leftoverLower)) ||
+               leftoverLower.split(' ').some(word => recipeIngredientsLower.includes(word));
+      }).length
     }));
+
+    console.log('Mock matches:', mockMatches.length);
 
     // Combine and sort by match score
     const combinedRecipes = [...filteredReverseRecipes, ...leftoverMatches, ...mockMatches];
     combinedRecipes.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
 
+    console.log('Total combined recipes:', combinedRecipes.length);
+
     // If no specific matches, return some enhanced recipes + leftover recipes + random recipes
     if (combinedRecipes.length === 0) {
-      return [...enhancedReverseRecipes.slice(0, 3), ...leftoverRecipes.slice(0, 3), ...getRandomRecipes(2)];
+      console.log('No matches found, returning fallback recipes');
+      const fallbackRecipes = [...enhancedReverseRecipes.slice(0, 3), ...leftoverRecipes.slice(0, 3), ...getRandomRecipes(2)];
+      console.log('Fallback recipes:', fallbackRecipes.length);
+      return fallbackRecipes;
     }
 
+    console.log('Returning matched recipes:', combinedRecipes.length);
     return combinedRecipes;
   };
 
