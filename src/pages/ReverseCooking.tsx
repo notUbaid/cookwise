@@ -114,6 +114,66 @@ const enhancedReverseRecipes = [
     leftoverCompatibility: 3
   },
   {
+    id: 'rc9',
+    title: 'Basmati Rice Biryani',
+    description: 'Aromatic biryani with basmati rice',
+    ingredients: ['Basmati Rice', 'Spices', 'Onion', 'Yogurt', 'Saffron', 'Ghee'],
+    image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
+    difficulty: 'Medium',
+    time: 60,
+    calories: 450,
+    cuisine: 'North Indian',
+    tags: ['Biryani', 'Aromatic', 'Festive'],
+    type: 'reverse',
+    matchScore: 4,
+    leftoverCompatibility: 2
+  },
+  {
+    id: 'rc10',
+    title: 'Bajra Roti with Sabzi',
+    description: 'Healthy pearl millet flatbread with vegetables',
+    ingredients: ['Bajra (Pearl Millet)', 'Wheat Flour', 'Vegetables', 'Spices', 'Oil'],
+    image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500',
+    difficulty: 'Medium',
+    time: 30,
+    calories: 280,
+    cuisine: 'North Indian',
+    tags: ['Healthy', 'Gluten-free', 'Traditional'],
+    type: 'reverse',
+    matchScore: 4,
+    leftoverCompatibility: 2
+  },
+  {
+    id: 'rc11',
+    title: 'Maida Naan',
+    description: 'Soft and fluffy refined flour bread',
+    ingredients: ['Maida (Refined Flour)', 'Yogurt', 'Yeast', 'Oil', 'Salt'],
+    image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500',
+    difficulty: 'Medium',
+    time: 45,
+    calories: 250,
+    cuisine: 'North Indian',
+    tags: ['Bread', 'Soft', 'Restaurant-style'],
+    type: 'reverse',
+    matchScore: 3,
+    leftoverCompatibility: 1
+  },
+  {
+    id: 'rc12',
+    title: 'Bread Upma',
+    description: 'Quick breakfast from leftover bread',
+    ingredients: ['Bread', 'Onion', 'Tomato', 'Spices', 'Oil', 'Mustard seeds'],
+    image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
+    difficulty: 'Easy',
+    time: 15,
+    calories: 200,
+    cuisine: 'South Indian',
+    tags: ['Breakfast', 'Quick', 'Leftover'],
+    type: 'reverse',
+    matchScore: 3,
+    leftoverCompatibility: 2
+  },
+  {
     id: 'rc2',
     title: 'Roti Churma Delight',
     description: 'Sweet dessert from leftover rotis',
@@ -230,7 +290,7 @@ export default function ReverseCooking() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [useMLApi, setUseMLApi] = useState(false);
-  const [useSpoonacularApi, setUseSpoonacularApi] = useState(false);
+  const [useSpoonacularApi, setUseSpoonacularApi] = useState(true);
   const [activeTab, setActiveTab] = useState('ingredients');
 
   useEffect(() => {
