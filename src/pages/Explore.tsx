@@ -55,6 +55,8 @@ export default function Explore() {
   const [selectedFestivalView, setSelectedFestivalView] = useState<string>('');
   const [festivalRecipes, setFestivalRecipes] = useState<Recipe[]>([]);
   const [festivalSearchQuery, setFestivalSearchQuery] = useState<string>('');
+  const [selectedQuickCategory, setSelectedQuickCategory] = useState<string>('');
+  const [quickCategoryRecipes, setQuickCategoryRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
     // Load saved recipes from localStorage
@@ -85,6 +87,15 @@ export default function Explore() {
       setFestivalRecipes([]);
     }
   }, [selectedFestivalView]);
+
+  useEffect(() => {
+    if (selectedQuickCategory) {
+      const recipes = getRecipesByQuickCategory(selectedQuickCategory);
+      setQuickCategoryRecipes(recipes);
+    } else {
+      setQuickCategoryRecipes([]);
+    }
+  }, [selectedQuickCategory]);
 
   const detectUserLocation = () => {
     // Get user location from localStorage
@@ -154,6 +165,7 @@ export default function Explore() {
     setSelectedDifficulty('');
     setSelectedDiet('');
     setSelectedSpice('');
+    setSelectedQuickCategory('');
   };
 
   const getLocationBasedRecipes = () => {
@@ -235,6 +247,25 @@ export default function Explore() {
   const clearFestivalSelection = () => {
     setSelectedFestivalView('');
     setFestivalSearchQuery('');
+  };
+
+  const clearQuickCategorySelection = () => {
+    setSelectedQuickCategory('');
+  };
+
+  const getRecipesByQuickCategory = (category: string): Recipe[] => {
+    switch (category) {
+      case 'Quick Meals':
+        return mockRecipes.filter(recipe => recipe.cookTime <= 30);
+      case 'Healthy Desi':
+        return mockRecipes.filter(recipe => recipe.isHealthy);
+      case 'Street Food':
+        return mockRecipes.filter(recipe => recipe.isStreetFood);
+      case 'Festive Specials':
+        return mockRecipes.filter(recipe => recipe.isFestive);
+      default:
+        return [];
+    }
   };
 
   return (
@@ -795,79 +826,128 @@ export default function Explore() {
             <Sparkles className="h-6 w-6 text-primary" />
             <h2 className="text-2xl font-serif font-bold">Quick Categories</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Quick Indian Meals */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
-                  Quick Meals
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Under 30 minutes recipes
-                </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Explore
+          
+          {selectedQuickCategory ? (
+            // Show selected category's recipes
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <Button 
+                  variant="outline" 
+                  onClick={clearQuickCategorySelection}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Categories
                 </Button>
-              </CardContent>
-            </Card>
+                <div>
+                  <h3 className="text-xl font-serif font-bold flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    {selectedQuickCategory}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {quickCategoryRecipes.length} recipes in this category
+                  </p>
+                </div>
+              </div>
+              
+              {quickCategoryRecipes.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {quickCategoryRecipes.map(recipe => (
+                    <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                      <RecipeCard
+                        recipe={recipe}
+                        onSave={handleSaveRecipe}
+                        isSaved={savedRecipes.includes(recipe.id)}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No recipes found</h3>
+                  <p className="text-muted-foreground">
+                    We're working on adding more recipes for {selectedQuickCategory}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            // Show all categories
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Quick Indian Meals */}
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Quick Meals
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Under 30 minutes recipes
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => setSelectedQuickCategory('Quick Meals')}>
+                    Explore
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Healthy Desi Recipes */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Leaf className="h-5 w-5" />
-                  Healthy Desi
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Nutritious Indian dishes
-                </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Explore
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Healthy Desi Recipes */}
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Leaf className="h-5 w-5" />
+                    Healthy Desi
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Nutritious Indian dishes
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => setSelectedQuickCategory('Healthy Desi')}>
+                    Explore
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Street Food */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Street Food
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Popular street delicacies
-                </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Explore
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Street Food */}
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    Street Food
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Popular street delicacies
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => setSelectedQuickCategory('Street Food')}>
+                    Explore
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Festive Specials */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Heart className="h-5 w-5" />
-                  Festive Specials
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Celebration recipes
-                </p>
-                <Button variant="outline" size="sm" className="w-full">
-                  Explore
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+              {/* Festive Specials */}
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    Festive Specials
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Celebration recipes
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => setSelectedQuickCategory('Festive Specials')}>
+                    Explore
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </section>
 
         {/* Filtered Results */}
