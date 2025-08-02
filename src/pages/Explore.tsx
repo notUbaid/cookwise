@@ -34,7 +34,9 @@ import {
   Heart,
   Sparkles,
   Compass,
-  Filter
+  Filter,
+  ArrowLeft,
+  ChefHat
 } from 'lucide-react';
 
 export default function Explore() {
@@ -47,6 +49,9 @@ export default function Explore() {
   const [userLocation, setUserLocation] = useState<string>('');
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
+  const [selectedState, setSelectedState] = useState<string>('');
+  const [stateRecipes, setStateRecipes] = useState<Recipe[]>([]);
+  const [stateSearchQuery, setStateSearchQuery] = useState<string>('');
 
   useEffect(() => {
     // Load saved recipes from localStorage
@@ -59,6 +64,15 @@ export default function Explore() {
     // Apply filters
     applyFilters();
   }, [selectedRegion, selectedFestival, selectedMeal, selectedDifficulty, selectedDiet, selectedSpice]);
+
+  useEffect(() => {
+    if (selectedState) {
+      const recipes = getRecipesByState(selectedState);
+      setStateRecipes(recipes);
+    } else {
+      setStateRecipes([]);
+    }
+  }, [selectedState]);
 
   const detectUserLocation = () => {
     // Get user location from localStorage
@@ -155,6 +169,37 @@ export default function Explore() {
 
   const getStreetFoodRecipes = () => {
     return mockRecipes.filter(recipe => recipe.isStreetFood);
+  };
+
+  const getRecipesByState = (stateName: string): Recipe[] => {
+    return mockRecipes.filter(recipe => recipe.state === stateName);
+  };
+
+  const getStatesByRegion = (region: string) => {
+    const states = indianStates.filter(state => state.region === region);
+    if (stateSearchQuery) {
+      return states.filter(state => 
+        state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()) ||
+        state.capital.toLowerCase().includes(stateSearchQuery.toLowerCase())
+      );
+    }
+    return states;
+  };
+
+  const handleRegionClick = (region: string) => {
+    setSelectedRegion(region);
+    setSelectedState('');
+    setStateSearchQuery('');
+  };
+
+  const handleStateClick = (stateName: string) => {
+    setSelectedState(stateName);
+  };
+
+  const clearStateSelection = () => {
+    setSelectedState('');
+    setSelectedRegion('');
+    setStateSearchQuery('');
   };
 
   return (
@@ -351,45 +396,203 @@ export default function Explore() {
             <MapPin className="h-6 w-6 text-primary" />
             <h2 className="text-2xl font-serif font-bold">Explore by Region</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regionalCategories.map(region => (
-              <Card key={region.name} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="text-xl font-serif flex items-center gap-2">
-                    <span>{region.icon}</span>
-                    {region.name}
-                  </CardTitle>
+          
+          {selectedState ? (
+            // Show selected state's dishes
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <Button 
+                  variant="outline" 
+                  onClick={clearStateSelection}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Regions
+                </Button>
+                <div>
+                  <h3 className="text-xl font-serif font-bold flex items-center gap-2">
+                    <ChefHat className="h-5 w-5 text-primary" />
+                    {selectedState} Cuisine
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    Traditional {region.cuisine} cuisine from {region.region} India
+                    {stateRecipes.length} traditional dishes from {selectedState}
                   </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm font-medium">Specialties:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {region.specialties?.slice(0, 2).map(dish => (
-                          <Badge key={dish} variant="secondary" className="text-xs">
-                            {dish}
-                          </Badge>
-                        )) || (
-                          <Badge variant="secondary" className="text-xs">
-                            Traditional Dishes
-                          </Badge>
-                        )}
+                </div>
+              </div>
+              
+              {stateRecipes.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {stateRecipes.map(recipe => (
+                    <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                      <RecipeCard
+                        recipe={recipe}
+                        onSave={handleSaveRecipe}
+                        isSaved={savedRecipes.includes(recipe.id)}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <ChefHat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No dishes found</h3>
+                  <p className="text-muted-foreground">
+                    We're working on adding more dishes from {selectedState}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : selectedRegion ? (
+            // Show states in selected region
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSelectedRegion('')}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Regions
+                </Button>
+                <div className="flex-1">
+                  <h3 className="text-xl font-serif font-bold">
+                    States in {selectedRegion} India
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    Click on a state to explore its local dishes
+                  </p>
+                </div>
+              </div>
+              
+              {/* Search States */}
+              <div className="mb-6">
+                <div className="relative max-w-md">
+                  <input
+                    type="text"
+                    placeholder="Search states or capitals..."
+                    value={stateSearchQuery}
+                    onChange={(e) => setStateSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                </div>
+                {stateSearchQuery && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Found {getStatesByRegion(selectedRegion).length} states matching "{stateSearchQuery}"
+                  </p>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getStatesByRegion(selectedRegion).map(state => {
+                  const stateRecipes = getRecipesByState(state.name);
+                  return (
+                    <Card 
+                      key={state.name} 
+                      className="hover:shadow-lg transition-shadow cursor-pointer group"
+                      onClick={() => handleStateClick(state.name)}
+                    >
+                      <CardHeader>
+                        <CardTitle className="text-lg font-serif flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-primary" />
+                          {state.name}
+                        </CardTitle>
+                        <p className="text-muted-foreground text-sm">
+                          Capital: {state.capital}
+                        </p>
+                      </CardHeader>
+                      <CardContent>
+                                               <div className="space-y-2">
+                         <div>
+                           <span className="text-sm font-medium">Available Dishes:</span>
+                           <Badge 
+                             variant={stateRecipes.length > 5 ? "default" : "secondary"} 
+                             className="text-xs ml-2"
+                           >
+                             {stateRecipes.length} recipes
+                           </Badge>
+                           {stateRecipes.length > 10 && (
+                             <Badge variant="destructive" className="text-xs ml-1">
+                               Popular!
+                             </Badge>
+                           )}
+                         </div>
+                         <div>
+                           <span className="text-sm font-medium">Region:</span>
+                           <Badge variant="outline" className="text-xs ml-1">
+                             {state.region}
+                           </Badge>
+                         </div>
+                         {stateRecipes.length > 0 && (
+                           <div>
+                             <span className="text-sm font-medium">Popular Dishes:</span>
+                             <div className="flex flex-wrap gap-1 mt-1">
+                               {stateRecipes.slice(0, 2).map(recipe => (
+                                 <Badge key={recipe.id} variant="secondary" className="text-xs">
+                                   {recipe.title}
+                                 </Badge>
+                               ))}
+                               {stateRecipes.length > 2 && (
+                                 <Badge variant="outline" className="text-xs">
+                                   +{stateRecipes.length - 2} more
+                                 </Badge>
+                               )}
+                             </div>
+                           </div>
+                         )}
+                       </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            // Show all regions
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {regionalCategories.map(region => (
+                <Card 
+                  key={region.name} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer group"
+                  onClick={() => handleRegionClick(region.region)}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-xl font-serif flex items-center gap-2">
+                      <span>{region.icon}</span>
+                      {region.name}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm">
+                      Traditional {region.cuisine} cuisine from {region.region} India
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div>
+                        <span className="text-sm font-medium">States:</span>
+                        <Badge variant="secondary" className="text-xs ml-2">
+                          {getStatesByRegion(region.region).length} states
+                        </Badge>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium">Region:</span>
+                        <Badge variant="outline" className="text-xs ml-1">
+                          {region.region}
+                        </Badge>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium">Total Dishes:</span>
+                        <Badge variant="secondary" className="text-xs ml-2">
+                          {getStatesByRegion(region.region).reduce((total, state) => 
+                            total + getRecipesByState(state.name).length, 0
+                          )} recipes
+                        </Badge>
                       </div>
                     </div>
-                    <div>
-                      <span className="text-sm font-medium">Region:</span>
-                      <Badge variant="outline" className="text-xs ml-1">
-                        {region.region}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Festival Favorites */}
