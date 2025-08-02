@@ -1,0 +1,18 @@
+{
+  "functions": {
+    "vercel-ml-functions/recipe-recommendations.js": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/recipe-recommendations",
+      "dest": "/vercel-ml-functions/recipe-recommendations.js"
+    }
+  ],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
+} 

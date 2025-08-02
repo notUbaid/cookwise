@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { RecipeCard } from '@/components/RecipeCard';
-import { quizQuestions, mockRecipes, getRecommendedRecipes } from '@/data/mockData';
+import { quizQuestions, mockRecipes, getRecommendedRecipes, getDetailedRecommendations, QuizPreferences } from '@/data/mockData';
 import { Sparkles, RotateCcw, ChefHat } from 'lucide-react';
 
 export default function Quiz() {
@@ -13,6 +13,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [showResults, setShowResults] = useState(false);
   const [quizResult, setQuizResult] = useState<any>(null);
+  const [detailedRecommendations, setDetailedRecommendations] = useState<any[]>([]);
 
   const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
 
@@ -26,21 +27,26 @@ export default function Quiz() {
       // Store quiz answers in localStorage
       localStorage.setItem('cookwise-quiz-answers', JSON.stringify(newAnswers));
       // Calculate preferences object
-      const preferences = {
-        spiceLevel: newAnswers[0],
-        cuisine: newAnswers[1],
-        experience: newAnswers[2],
-        time: newAnswers[3],
-        dietType: newAnswers[4],
+      const preferences: QuizPreferences = {
+        spiceLevel: newAnswers[0] as 'mild' | 'medium' | 'spicy',
+        cuisine: newAnswers[1] as 'north' | 'south' | 'east' | 'west',
+        experience: newAnswers[2] as 'easy' | 'medium' | 'hard',
+        time: newAnswers[3] as 'quick' | 'medium' | 'long',
+        dietType: newAnswers[4] as 'veg' | 'vegan' | 'non-veg' | 'flexible',
       };
       localStorage.setItem('cookwise-quiz-preferences', JSON.stringify(preferences));
-      // Get recommended recipes
+      
+      // Get recommended recipes with enhanced algorithm
       const recommended = getRecommendedRecipes(preferences);
+      const detailed = getDetailedRecommendations(preferences);
+      
       setQuizResult({
         title: 'Your Personalized Taste Profile',
-        description: 'Recipes matched to your quiz answers.',
+        description: 'Recipes matched to your quiz answers with advanced AI recommendations.',
         recommendedRecipes: recommended.map(r => r.id),
+        preferences: preferences,
       });
+      setDetailedRecommendations(detailed);
       setShowResults(true);
     }
   };
@@ -66,6 +72,7 @@ export default function Quiz() {
     setAnswers({});
     setShowResults(false);
     setQuizResult(null);
+    setDetailedRecommendations([]);
   };
 
   const getRecommendedRecipes = () => {
@@ -101,16 +108,64 @@ export default function Quiz() {
             </CardContent>
           </Card>
 
+          {/* Preference Analysis */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl font-serif">Your Taste Profile Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">Spice Preference</div>
+                  <div className="text-lg font-semibold capitalize">{quizResult.preferences.spiceLevel}</div>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">Cuisine Interest</div>
+                  <div className="text-lg font-semibold capitalize">{quizResult.preferences.cuisine} Indian</div>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">Cooking Experience</div>
+                  <div className="text-lg font-semibold capitalize">{quizResult.preferences.experience}</div>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">Time Availability</div>
+                  <div className="text-lg font-semibold capitalize">{quizResult.preferences.time}</div>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">Dietary Preference</div>
+                  <div className="text-lg font-semibold capitalize">{quizResult.preferences.dietType}</div>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground">AI Matches Found</div>
+                  <div className="text-lg font-semibold text-primary">{detailedRecommendations.length}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Recommended Recipes */}
           <div className="mb-8">
             <h2 className="text-3xl font-serif font-bold gradient-text mb-6 text-center">
-              Perfect Recipes for You
+              AI-Powered Recipe Recommendations
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
-              {recommendedRecipes.map((recipe) => (
-                <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
-                  <RecipeCard recipe={recipe} />
-                </Link>
+              {detailedRecommendations.slice(0, 6).map((item) => (
+                <div key={item.recipe.id} className="relative">
+                  <Link to={`/recipe/${item.recipe.id}`}>
+                    <RecipeCard recipe={item.recipe} />
+                  </Link>
+                  <div className="absolute top-2 right-2">
+                    <Badge className="bg-primary text-primary-foreground">
+                      {item.score}% Match
+                    </Badge>
+                  </div>
+                  {item.matchReasons.length > 0 && (
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      <div className="font-medium">Why this matches:</div>
+                      <div className="truncate">{item.matchReasons[0]}</div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>

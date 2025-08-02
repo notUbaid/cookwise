@@ -1,0 +1,63 @@
+/* Zapier Chatbot Styles */
+.zapier-chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  pointer-events: none; /* Allow clicks to pass through to the chatbot */
+}
+
+/* Ensure the chatbot element itself can receive interactions */
+.zapier-chatbot-container zapier-interfaces-chatbot-embed {
+  pointer-events: auto;
+}
+
+/* Loading state styles */
+.zapier-chatbot-loading {
+  width: 60px;
+  height: 60px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive positioning for mobile devices */
+@media (max-width: 768px) {
+  .zapier-chatbot-container {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .zapier-chatbot-loading {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Ensure the chatbot doesn't interfere with other UI elements */
+.zapier-chatbot-container * {
+  box-sizing: border-box;
+} 

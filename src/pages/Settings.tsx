@@ -40,9 +40,9 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-background shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>
@@ -51,7 +51,7 @@ export default function Settings() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-xl font-serif font-bold">Settings</h1>
+              <h1 className="text-xl font-serif font-bold text-foreground">Settings</h1>
               <p className="text-sm text-muted-foreground">Manage your preferences</p>
             </div>
           </div>

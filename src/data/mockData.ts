@@ -47,7 +47,7 @@ export interface MealPlan {
   totalCalories: number;
   cuisine: string;
   dietType: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: 'Quick' | 'Medium' | 'Hard';
   prepTime: number;
   image: string;
 }
@@ -312,7 +312,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Assamese', 'Sour Curry', 'Traditional', 'Healthy'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -361,7 +361,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Chettinad', 'Spicy', 'Traditional', 'Rich'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Pongal',
     isHealthy: false,
@@ -457,7 +457,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Himachali', 'Steamed', 'Festive', 'Sweet'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Diwali',
     isHealthy: false,
@@ -550,7 +550,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Rajasthani', 'Royal', 'Traditional', 'Festive'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Gangaur',
     isHealthy: false,
@@ -692,7 +692,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Kashmiri', 'Mutton', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -740,7 +740,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Breakfast', 'Festive', 'Comfort'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: true,
     festival: 'Pongal',
     isHealthy: true,
@@ -882,7 +882,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'One-pot', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Ugadi',
     isHealthy: true,
@@ -930,7 +930,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Odia', 'Summer', 'Fermented', 'Cooling'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -977,7 +977,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Himachali', 'Steamed', 'Festive', 'Sweet'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Diwali',
     isHealthy: false,
@@ -1072,7 +1072,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Awadhi', 'Royal', 'Dum Cooking', 'Festive'],
     servings: 8,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -1120,7 +1120,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Pickle', 'Tangy', 'Traditional'],
     servings: 6,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -1214,7 +1214,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Chhattisgarhi', 'Breakfast', 'Quick', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -1308,7 +1308,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Khasi', 'Pork', 'Ceremonial', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Christmas',
     isHealthy: false,
@@ -1638,7 +1638,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Delhi', 'Street Food', 'Breakfast', 'Popular'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: false,
     isHealthy: false,
     isStreetFood: true
@@ -1732,7 +1732,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Telangana', 'Spicy', 'Dum Cooking', 'Traditional'],
     servings: 8,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -1780,7 +1780,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Coastal', 'Coconut', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -1922,7 +1922,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2156,7 +2156,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'One-pot', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Ugadi',
     isHealthy: true,
@@ -2251,7 +2251,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Layered', 'Flaky', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: false,
     isHealthy: false,
     isStreetFood: false
@@ -2392,7 +2392,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Maharashtrian', 'Sweet', 'Festive', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Gudi Padwa',
     isHealthy: false,
@@ -2487,7 +2487,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Soup', 'Digestive', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2581,7 +2581,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Pickle', 'Tangy', 'Traditional'],
     servings: 6,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2628,7 +2628,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'Thin', 'Lacy', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2675,7 +2675,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Stir-fry', 'Vegetables', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2769,7 +2769,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Breakfast', 'Quick', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -2816,7 +2816,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'One-pot', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Ugadi',
     isHealthy: true,
@@ -2864,7 +2864,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3051,7 +3051,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3098,7 +3098,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Coastal', 'Coconut', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -3193,7 +3193,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'Thin', 'Lacy', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3240,7 +3240,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Stir-fry', 'Vegetables', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3334,7 +3334,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Pickle', 'Tangy', 'Traditional'],
     servings: 6,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3381,7 +3381,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Soup', 'Digestive', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3475,7 +3475,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Maharashtrian', 'Sweet', 'Festive', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Gudi Padwa',
     isHealthy: false,
@@ -3617,7 +3617,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Layered', 'Flaky', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: false,
     isHealthy: false,
     isStreetFood: false
@@ -3711,7 +3711,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'One-pot', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Ugadi',
     isHealthy: true,
@@ -3759,7 +3759,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -3852,7 +3852,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Breakfast', 'Quick', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4040,7 +4040,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4087,7 +4087,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Coastal', 'Coconut', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -4182,7 +4182,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'Thin', 'Lacy', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4229,7 +4229,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Stir-fry', 'Vegetables', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4323,7 +4323,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Pickle', 'Tangy', 'Traditional'],
     servings: 6,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4370,7 +4370,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Soup', 'Digestive', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4464,7 +4464,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Maharashtrian', 'Sweet', 'Festive', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Gudi Padwa',
     isHealthy: false,
@@ -4606,7 +4606,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Layered', 'Flaky', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: false,
     isHealthy: false,
     isStreetFood: false
@@ -4700,7 +4700,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'One-pot', 'Spicy', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Ugadi',
     isHealthy: true,
@@ -4748,7 +4748,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -4841,7 +4841,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Breakfast', 'Quick', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5029,7 +5029,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Breakfast', 'Protein-rich', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5076,7 +5076,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Malabar', 'Coastal', 'Coconut', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Eid',
     isHealthy: false,
@@ -5171,7 +5171,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Karnataka', 'Thin', 'Lacy', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5218,7 +5218,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Stir-fry', 'Vegetables', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5312,7 +5312,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Andhra', 'Pickle', 'Tangy', 'Traditional'],
     servings: 6,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5359,7 +5359,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Tamil', 'Soup', 'Digestive', 'Traditional'],
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     isFestive: false,
     isHealthy: true,
     isStreetFood: false
@@ -5453,7 +5453,7 @@ export const mockRecipes: Recipe[] = [
     isOfflineAvailable: true,
     tags: ['Maharashtrian', 'Sweet', 'Festive', 'Traditional'],
     servings: 6,
-    difficulty: 'Hard',
+    difficulty: 'Long',
     isFestive: true,
     festival: 'Gudi Padwa',
     isHealthy: false,
@@ -5602,7 +5602,7 @@ export const mockMealPlans: MealPlan[] = [
     totalCalories: 1800,
     cuisine: 'Mixed',
     dietType: 'Balanced',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     prepTime: 30,
     image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500'
   }
@@ -6087,7 +6087,7 @@ export const leftoverRecipes = [
     description: 'Sweet dessert made from leftover rotis',
     ingredients: ['Leftover rotis', 'Ghee', 'Sugar', 'Cardamom', 'Nuts', 'Saffron'],
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 15,
     calories: 380,
     cuisine: 'North Indian',
@@ -6115,7 +6115,7 @@ export const leftoverRecipes = [
     description: 'Quick fried rice with leftover rice',
     ingredients: ['Leftover rice', 'Vegetables', 'Soy sauce', 'Oil', 'Garlic', 'Ginger'],
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 20,
     calories: 450,
     cuisine: 'Indo-Chinese',
@@ -6143,7 +6143,7 @@ export const leftoverRecipes = [
     description: 'Biryani using leftover chicken',
     ingredients: ['Leftover chicken', 'Rice', 'Spices', 'Onions', 'Yogurt', 'Saffron'],
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
-    difficulty: 'Hard',
+    difficulty: 'Long',
     time: 60,
     calories: 550,
     cuisine: 'Hyderabadi',
@@ -6157,7 +6157,7 @@ export const leftoverRecipes = [
     description: 'Grilled paneer with leftover paneer',
     ingredients: ['Leftover paneer', 'Yogurt', 'Spices', 'Bell peppers', 'Onions'],
     image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 20,
     calories: 380,
     cuisine: 'North Indian',
@@ -6171,7 +6171,7 @@ export const leftoverRecipes = [
     description: 'Breakfast from leftover semolina',
     ingredients: ['Sooji', 'Vegetables', 'Mustard seeds', 'Curry leaves', 'Oil'],
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 15,
     calories: 350,
     cuisine: 'South Indian',
@@ -6185,7 +6185,7 @@ export const leftoverRecipes = [
     description: 'Refreshing yogurt dish with leftover vegetables',
     ingredients: ['Yogurt', 'Cucumber', 'Tomatoes', 'Onions', 'Spices', 'Mint'],
     image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 10,
     calories: 180,
     cuisine: 'North Indian',
@@ -6199,7 +6199,7 @@ export const leftoverRecipes = [
     description: 'Crispy chips from leftover rotis',
     ingredients: ['Leftover rotis', 'Oil', 'Spices', 'Salt'],
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 10,
     calories: 220,
     cuisine: 'North Indian',
@@ -6213,7 +6213,7 @@ export const leftoverRecipes = [
     description: 'Hearty soup from leftover dal',
     ingredients: ['Leftover dal', 'Vegetables', 'Spices', 'Ginger', 'Garlic'],
     image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 15,
     calories: 280,
     cuisine: 'North Indian',
@@ -6227,7 +6227,7 @@ export const leftoverRecipes = [
     description: 'Sweet dessert from leftover rice',
     ingredients: ['Leftover rice', 'Milk', 'Sugar', 'Cardamom', 'Nuts'],
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 20,
     calories: 400,
     cuisine: 'North Indian',
@@ -6241,7 +6241,7 @@ export const leftoverRecipes = [
     description: 'Flavorful stock from vegetable scraps',
     ingredients: ['Vegetable scraps', 'Onions', 'Carrots', 'Celery', 'Herbs'],
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
-    difficulty: 'Easy',
+    difficulty: 'Quick',
     time: 45,
     calories: 80,
     cuisine: 'International',
@@ -6307,6 +6307,22 @@ export const substitutionTips = [
   'Substitute mustard oil with any neutral cooking oil.',
   'Replace meat with jackfruit for vegetarian meat alternatives.'
 ];
+
+// Enhanced preference interface for better type safety
+export interface QuizPreferences {
+  spiceLevel: 'mild' | 'medium' | 'spicy';
+  cuisine: 'north' | 'south' | 'east' | 'west';
+  experience: 'easy' | 'medium' | 'hard';
+  time: 'quick' | 'medium' | 'long';
+  dietType: 'veg' | 'vegan' | 'non-veg' | 'flexible';
+}
+
+// Enhanced recipe scoring interface
+export interface RecipeScore {
+  recipe: Recipe;
+  score: number;
+  matchReasons: string[];
+}
 
 // Quiz questions for the taste quiz
 export const quizQuestions = [
@@ -6379,21 +6395,213 @@ export const getRecentlyViewedRecipes = (): Recipe[] => {
   return mockRecipes.slice(2, 8);
 };
 
-// Mock data for recommended recipes based on preferences
-export const getRecommendedRecipes = (preferences: any): Recipe[] => {
-  // Simple mock logic - in real app, this would use ML/AI
-  return mockRecipes.filter(recipe => {
-    if (preferences.spiceLevel && recipe.spiceLevel === preferences.spiceLevel) return true;
-    if (preferences.cuisine && recipe.cuisine.includes(preferences.cuisine)) return true;
-    if (preferences.dietType && recipe.dietType.includes(preferences.dietType)) return true;
-    return false;
-  }).slice(0, 6);
+// Enhanced recommendation algorithm with weighted scoring
+export const getRecommendedRecipes = (preferences: QuizPreferences): Recipe[] => {
+  const scoredRecipes: RecipeScore[] = mockRecipes.map(recipe => {
+    let score = 0;
+    const matchReasons: string[] = [];
+
+    // Spice Level Matching (Weight: 25%)
+    const spiceLevelMap: { [key: string]: string } = {
+      'mild': 'Mild',
+      'medium': 'Medium', 
+      'spicy': 'Spicy'
+    };
+    if (preferences.spiceLevel && recipe.spiceLevel === spiceLevelMap[preferences.spiceLevel]) {
+      score += 25;
+      matchReasons.push(`Perfect spice level: ${recipe.spiceLevel}`);
+    } else if (preferences.spiceLevel) {
+      // Partial match for adjacent spice levels
+      const spiceOrder = ['Mild', 'Medium', 'Spicy'];
+      const userSpiceIndex = spiceOrder.indexOf(spiceLevelMap[preferences.spiceLevel]);
+      const recipeSpiceIndex = spiceOrder.indexOf(recipe.spiceLevel);
+      const spiceDiff = Math.abs(userSpiceIndex - recipeSpiceIndex);
+      if (spiceDiff === 1) {
+        score += 15;
+        matchReasons.push(`Close spice level: ${recipe.spiceLevel}`);
+      }
+    }
+
+    // Cuisine Matching (Weight: 20%)
+    const cuisineRegionMap: { [key: string]: string[] } = {
+      'north': ['North', 'Northeast'],
+      'south': ['South'],
+      'east': ['East'],
+      'west': ['West'],
+      'central': ['Central']
+    };
+    if (preferences.cuisine && cuisineRegionMap[preferences.cuisine]?.includes(recipe.region)) {
+      score += 20;
+      matchReasons.push(`Regional cuisine: ${recipe.region} Indian`);
+    }
+
+    // Cooking Experience Matching (Weight: 15%)
+    const experienceMap: { [key: string]: string } = {
+      'easy': 'Easy',
+      'medium': 'Medium',
+      'hard': 'Hard'
+    };
+    if (preferences.experience && recipe.effort === experienceMap[preferences.experience]) {
+      score += 15;
+      matchReasons.push(`Perfect difficulty: ${recipe.effort}`);
+    }
+
+    // Time Preference Matching (Weight: 20%)
+    const timeMap: { [key: string]: string } = {
+      'quick': 'Quick',
+      'medium': 'Medium',
+      'long': 'Long'
+    };
+    if (preferences.time && recipe.difficulty === timeMap[preferences.time]) {
+      score += 20;
+      matchReasons.push(`Ideal cooking time: ${recipe.difficulty}`);
+    } else if (preferences.time === 'quick' && recipe.cookingTime <= 30) {
+      score += 15;
+      matchReasons.push(`Quick to prepare: ${recipe.cookingTime} minutes`);
+    }
+
+    // Dietary Preference Matching (Weight: 20%)
+    if (preferences.dietType) {
+      const dietMatches = {
+        'veg': recipe.dietType.some(diet => diet.includes('Veg') && !diet.includes('Non')),
+        'vegan': recipe.dietType.some(diet => diet.includes('Vegan')),
+        'non-veg': recipe.dietType.some(diet => diet.includes('Non-Veg')),
+        'flexible': true
+      };
+      
+      if (dietMatches[preferences.dietType as keyof typeof dietMatches]) {
+        score += 20;
+        matchReasons.push(`Dietary match: ${recipe.dietType.join(', ')}`);
+      }
+    }
+
+    // Bonus points for healthy options if user prefers quick meals
+    if (preferences.time === 'quick' && recipe.isHealthy) {
+      score += 5;
+      matchReasons.push('Healthy quick option');
+    }
+
+    // Bonus for street food if user likes spicy food
+    if (preferences.spiceLevel === 'spicy' && recipe.isStreetFood) {
+      score += 5;
+      matchReasons.push('Authentic street food');
+    }
+
+    return { recipe, score, matchReasons };
+  });
+
+  // Sort by score and return top recipes
+  return scoredRecipes
+    .filter(item => item.score > 0) // Only recipes with some match
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 12) // Return more recipes for better variety
+    .map(item => item.recipe);
 };
 
-export function getQuizPreferences() {
+// Enhanced function to get detailed recommendations with explanations
+export const getDetailedRecommendations = (preferences: QuizPreferences): RecipeScore[] => {
+  const scoredRecipes: RecipeScore[] = mockRecipes.map(recipe => {
+    let score = 0;
+    const matchReasons: string[] = [];
+
+    // Spice Level Matching (Weight: 25%)
+    const spiceLevelMap: { [key: string]: string } = {
+      'mild': 'Mild',
+      'medium': 'Medium', 
+      'spicy': 'Spicy'
+    };
+    if (preferences.spiceLevel && recipe.spiceLevel === spiceLevelMap[preferences.spiceLevel]) {
+      score += 25;
+      matchReasons.push(`Perfect spice level: ${recipe.spiceLevel}`);
+    } else if (preferences.spiceLevel) {
+      const spiceOrder = ['Mild', 'Medium', 'Spicy'];
+      const userSpiceIndex = spiceOrder.indexOf(spiceLevelMap[preferences.spiceLevel]);
+      const recipeSpiceIndex = spiceOrder.indexOf(recipe.spiceLevel);
+      const spiceDiff = Math.abs(userSpiceIndex - recipeSpiceIndex);
+      if (spiceDiff === 1) {
+        score += 15;
+        matchReasons.push(`Close spice level: ${recipe.spiceLevel}`);
+      }
+    }
+
+    // Cuisine Matching (Weight: 20%)
+    const cuisineRegionMap: { [key: string]: string[] } = {
+      'north': ['North', 'Northeast'],
+      'south': ['South'],
+      'east': ['East'],
+      'west': ['West'],
+      'central': ['Central']
+    };
+    if (preferences.cuisine && cuisineRegionMap[preferences.cuisine]?.includes(recipe.region)) {
+      score += 20;
+      matchReasons.push(`Regional cuisine: ${recipe.region} Indian`);
+    }
+
+    // Cooking Experience Matching (Weight: 15%)
+    const experienceMap: { [key: string]: string } = {
+      'easy': 'Easy',
+      'medium': 'Medium',
+      'hard': 'Hard'
+    };
+    if (preferences.experience && recipe.effort === experienceMap[preferences.experience]) {
+      score += 15;
+      matchReasons.push(`Perfect difficulty: ${recipe.effort}`);
+    }
+
+    // Time Preference Matching (Weight: 20%)
+    const timeMap: { [key: string]: string } = {
+      'quick': 'Quick',
+      'medium': 'Medium',
+      'long': 'Long'
+    };
+    if (preferences.time && recipe.difficulty === timeMap[preferences.time]) {
+      score += 20;
+      matchReasons.push(`Ideal cooking time: ${recipe.difficulty}`);
+    } else if (preferences.time === 'quick' && recipe.cookingTime <= 30) {
+      score += 15;
+      matchReasons.push(`Quick to prepare: ${recipe.cookingTime} minutes`);
+    }
+
+    // Dietary Preference Matching (Weight: 20%)
+    if (preferences.dietType) {
+      const dietMatches = {
+        'veg': recipe.dietType.some(diet => diet.includes('Veg') && !diet.includes('Non')),
+        'vegan': recipe.dietType.some(diet => diet.includes('Vegan')),
+        'non-veg': recipe.dietType.some(diet => diet.includes('Non-Veg')),
+        'flexible': true
+      };
+      
+      if (dietMatches[preferences.dietType as keyof typeof dietMatches]) {
+        score += 20;
+        matchReasons.push(`Dietary match: ${recipe.dietType.join(', ')}`);
+      }
+    }
+
+    // Bonus points for healthy options if user prefers quick meals
+    if (preferences.time === 'quick' && recipe.isHealthy) {
+      score += 5;
+      matchReasons.push('Healthy quick option');
+    }
+
+    // Bonus for street food if user likes spicy food
+    if (preferences.spiceLevel === 'spicy' && recipe.isStreetFood) {
+      score += 5;
+      matchReasons.push('Authentic street food');
+    }
+
+    return { recipe, score, matchReasons };
+  });
+
+  return scoredRecipes
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 20);
+};
+
+export function getQuizPreferences(): QuizPreferences | null {
   try {
     const prefs = localStorage.getItem('cookwise-quiz-preferences');
-    if (prefs) return JSON.parse(prefs);
+    if (prefs) return JSON.parse(prefs) as QuizPreferences;
     return null;
   } catch {
     return null;

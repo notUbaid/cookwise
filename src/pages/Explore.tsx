@@ -36,7 +36,8 @@ import {
   Compass,
   Filter,
   ArrowLeft,
-  ChefHat
+  ChefHat,
+  Search
 } from 'lucide-react';
 
 export default function Explore() {
@@ -57,6 +58,9 @@ export default function Explore() {
   const [festivalSearchQuery, setFestivalSearchQuery] = useState<string>('');
   const [selectedQuickCategory, setSelectedQuickCategory] = useState<string>('');
   const [quickCategoryRecipes, setQuickCategoryRecipes] = useState<Recipe[]>([]);
+  const [selectedCuisine, setSelectedCuisine] = useState<string>('');
+  const [cuisineRecipes, setCuisineRecipes] = useState<Recipe[]>([]);
+  const [cuisineSearchQuery, setCuisineSearchQuery] = useState<string>('');
 
   useEffect(() => {
     // Load saved recipes from localStorage
@@ -96,6 +100,15 @@ export default function Explore() {
       setQuickCategoryRecipes([]);
     }
   }, [selectedQuickCategory]);
+
+  useEffect(() => {
+    if (selectedCuisine) {
+      const recipes = getRecipesByCuisine(selectedCuisine);
+      setCuisineRecipes(recipes);
+    } else {
+      setCuisineRecipes([]);
+    }
+  }, [selectedCuisine]);
 
   const detectUserLocation = () => {
     // Get user location from localStorage
@@ -166,6 +179,8 @@ export default function Explore() {
     setSelectedDiet('');
     setSelectedSpice('');
     setSelectedQuickCategory('');
+    setSelectedCuisine('');
+    setCuisineSearchQuery('');
   };
 
   const getLocationBasedRecipes = () => {
@@ -225,9 +240,15 @@ export default function Explore() {
   };
 
   const handleRegionClick = (region: string) => {
-    setSelectedRegion(region);
-    setSelectedState('');
-    setStateSearchQuery('');
+    // Find the cuisine for this region
+    const regionalCategory = regionalCategories.find(cat => cat.name === region);
+    if (regionalCategory) {
+      setSelectedCuisine(regionalCategory.cuisine);
+      setSelectedRegion('');
+      setSelectedState('');
+      setStateSearchQuery('');
+      setCuisineSearchQuery('');
+    }
   };
 
   const handleStateClick = (stateName: string) => {
@@ -253,6 +274,11 @@ export default function Explore() {
     setSelectedQuickCategory('');
   };
 
+  const clearCuisineSelection = () => {
+    setSelectedCuisine('');
+    setCuisineSearchQuery('');
+  };
+
   const getRecipesByQuickCategory = (category: string): Recipe[] => {
     switch (category) {
       case 'Quick Meals':
@@ -268,8 +294,12 @@ export default function Explore() {
     }
   };
 
+  const getRecipesByCuisine = (cuisine: string): Recipe[] => {
+    return mockRecipes.filter(recipe => recipe.cuisine === cuisine);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header Section */}
       <section className="relative py-16 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>
@@ -307,7 +337,7 @@ export default function Explore() {
               <select 
                 value={selectedRegion} 
                 onChange={(e) => setSelectedRegion(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Regions</option>
                 {Object.entries(regionalCategories).map(([key, region]) => (
@@ -322,7 +352,7 @@ export default function Explore() {
               <select 
                 value={selectedFestival} 
                 onChange={(e) => setSelectedFestival(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Festivals</option>
                 {festivalCategories.map(festival => (
@@ -337,7 +367,7 @@ export default function Explore() {
               <select 
                 value={selectedMeal} 
                 onChange={(e) => setSelectedMeal(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Meals</option>
                 {mealCategories.map(meal => (
@@ -352,7 +382,7 @@ export default function Explore() {
               <select 
                 value={selectedDifficulty} 
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Levels</option>
                 {difficultyLevels.map(difficulty => (
@@ -367,7 +397,7 @@ export default function Explore() {
               <select 
                 value={selectedDiet} 
                 onChange={(e) => setSelectedDiet(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Diets</option>
                 {dietTypes.map(diet => (
@@ -382,7 +412,7 @@ export default function Explore() {
               <select 
                 value={selectedSpice} 
                 onChange={(e) => setSelectedSpice(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm bg-background text-foreground border-input"
               >
                 <option value="">All Levels</option>
                 {spiceLevels.map(spice => (
@@ -463,13 +493,13 @@ export default function Explore() {
             <h2 className="text-2xl font-serif font-bold">Explore by Region</h2>
           </div>
           
-          {selectedState ? (
-            // Show selected state's dishes
+          {selectedCuisine ? (
+            // Show selected cuisine's dishes
             <div>
               <div className="flex items-center gap-4 mb-6">
                 <Button 
                   variant="outline" 
-                  onClick={clearStateSelection}
+                  onClick={clearCuisineSelection}
                   className="flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -478,17 +508,17 @@ export default function Explore() {
                 <div>
                   <h3 className="text-xl font-serif font-bold flex items-center gap-2">
                     <ChefHat className="h-5 w-5 text-primary" />
-                    {selectedState} Cuisine
+                    {selectedCuisine} Cuisine
                   </h3>
                   <p className="text-muted-foreground text-sm">
-                    {stateRecipes.length} traditional dishes from {selectedState}
+                    {cuisineRecipes.length} traditional dishes from {selectedCuisine}
                   </p>
                 </div>
               </div>
               
-              {stateRecipes.length > 0 ? (
+              {cuisineRecipes.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {stateRecipes.map(recipe => (
+                  {cuisineRecipes.map(recipe => (
                     <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
                       <RecipeCard
                         recipe={recipe}
@@ -503,7 +533,7 @@ export default function Explore() {
                   <ChefHat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">No dishes found</h3>
                   <p className="text-muted-foreground">
-                    We're working on adding more dishes from {selectedState}
+                    We're working on adding more dishes from {selectedCuisine}
                   </p>
                 </div>
               )}
@@ -620,7 +650,7 @@ export default function Explore() {
                 <Card 
                   key={region.name} 
                   className="hover:shadow-lg transition-shadow cursor-pointer group"
-                  onClick={() => handleRegionClick(region.region)}
+                  onClick={() => handleRegionClick(region.name)}
                 >
                   <CardHeader>
                     <CardTitle className="text-xl font-serif flex items-center gap-2">

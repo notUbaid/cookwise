@@ -175,6 +175,11 @@ export default function MealPlan() {
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [excludedIngredients, setExcludedIngredients] = useState<string[]>([]);
 
+  // Auto-generate meal plan on component mount
+  useEffect(() => {
+    generateMealPlan();
+  }, []);
+
   const generateMealPlan = async () => {
     setIsLoading(true);
     setError(null);
@@ -250,6 +255,12 @@ export default function MealPlan() {
       return true;
     });
 
+    // Ensure we have recipes to work with
+    if (availableRecipes.length === 0) {
+      console.warn('No recipes available for the selected filters');
+      return generateFallbackMealPlan();
+    }
+
     const createMockMeal = (recipe: any): EdamamMeal => ({
       id: recipe.id,
       title: recipe.title,
@@ -262,7 +273,7 @@ export default function MealPlan() {
       dietLabels: recipe.dietType,
       healthLabels: recipe.dietType,
       cuisineType: [recipe.cuisine],
-      mealType: [recipe.mealType],
+      mealType: [recipe.mealType.toLowerCase()], // Ensure lowercase for matching
       dishType: [recipe.tags[0] || 'main course']
     });
 
@@ -286,35 +297,99 @@ export default function MealPlan() {
       let totalCarbs = 0;
       
       mealTypes.forEach(mealType => {
-        const filteredRecipes = availableRecipes.filter(recipe => {
-          if (mealType === 'breakfast') return recipe.mealType === 'Breakfast';
-          if (mealType === 'lunch') return recipe.mealType === 'Lunch';
-          if (mealType === 'dinner') return recipe.mealType === 'Dinner';
+        // Filter recipes by meal type, with fallback to any recipe
+        let filteredRecipes = availableRecipes.filter(recipe => {
+          const recipeMealType = recipe.mealType.toLowerCase();
+          if (mealType === 'breakfast') return recipeMealType === 'breakfast';
+          if (mealType === 'lunch') return recipeMealType === 'lunch';
+          if (mealType === 'dinner') return recipeMealType === 'dinner';
           return true;
         });
         
         // If no specific meal type recipes, use any recipe
-        const recipesToChooseFrom = filteredRecipes.length > 0 ? filteredRecipes : availableRecipes;
-        const randomRecipe = recipesToChooseFrom[Math.floor(Math.random() * recipesToChooseFrom.length)] || availableRecipes[0];
+        if (filteredRecipes.length === 0) {
+          filteredRecipes = availableRecipes;
+        }
         
-        // Adjust recipe calories to match meal target
-        const adjustedRecipe = {
-          ...randomRecipe,
-          calories: mealCalorieTargets[mealType as keyof typeof mealCalorieTargets],
-          macros: {
-            protein: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.15 / 4), // 15% protein
-            fat: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.25 / 9),    // 25% fat
-            carbs: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.60 / 4)  // 60% carbs
-          }
+        // Select a random recipe
+        const randomRecipe = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
+        
+        if (randomRecipe) {
+          // Adjust recipe calories to match meal target
+          const adjustedRecipe = {
+            ...randomRecipe,
+            calories: mealCalorieTargets[mealType as keyof typeof mealCalorieTargets],
+            macros: {
+              protein: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.15 / 4), // 15% protein
+              fat: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.25 / 9),    // 25% fat
+              carbs: Math.round(mealCalorieTargets[mealType as keyof typeof mealCalorieTargets] * 0.60 / 4)  // 60% carbs
+            }
+          };
+          
+          const mockMeal = createMockMeal(adjustedRecipe);
+          dayMeals.push(mockMeal);
+          
+          totalCalories += adjustedRecipe.calories;
+          totalProtein += adjustedRecipe.macros.protein;
+          totalFat += adjustedRecipe.macros.fat;
+          totalCarbs += adjustedRecipe.macros.carbs;
+        }
+      });
+      
+      week[day] = {
+        meals: dayMeals,
+        nutrients: {
+          calories: Math.round(totalCalories),
+          protein: `${Math.round(totalProtein)}g`,
+          fat: `${Math.round(totalFat)}g`,
+          carbs: `${Math.round(totalCarbs)}g`
+        }
+      };
+    });
+    
+    return { week };
+  };
+
+  const generateFallbackMealPlan = (): EdamamMealPlan => {
+    // Create a basic fallback meal plan with default recipes
+    const fallbackRecipes = [
+      { id: '1', title: 'Simple Breakfast', mealType: 'breakfast', calories: 500, macros: { protein: 20, fat: 15, carbs: 60 } },
+      { id: '2', title: 'Basic Lunch', mealType: 'lunch', calories: 700, macros: { protein: 30, fat: 25, carbs: 80 } },
+      { id: '3', title: 'Simple Dinner', mealType: 'dinner', calories: 800, macros: { protein: 35, fat: 30, carbs: 90 } }
+    ];
+
+    const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const week: any = {};
+    
+    weekDays.forEach(day => {
+      const dayMeals: EdamamMeal[] = [];
+      let totalCalories = 0;
+      let totalProtein = 0;
+      let totalFat = 0;
+      let totalCarbs = 0;
+      
+      fallbackRecipes.forEach(recipe => {
+        const mockMeal: EdamamMeal = {
+          id: recipe.id,
+          title: recipe.title,
+          image: '/placeholder.svg',
+          calories: recipe.calories,
+          protein: `${recipe.macros.protein}g`,
+          fat: `${recipe.macros.fat}g`,
+          carbs: `${recipe.macros.carbs}g`,
+          url: `/recipe/${recipe.id}`,
+          dietLabels: ['balanced'],
+          healthLabels: ['balanced'],
+          cuisineType: ['indian'],
+          mealType: [recipe.mealType],
+          dishType: ['main course']
         };
         
-        const mockMeal = createMockMeal(adjustedRecipe);
         dayMeals.push(mockMeal);
-        
-        totalCalories += adjustedRecipe.calories;
-        totalProtein += adjustedRecipe.macros.protein;
-        totalFat += adjustedRecipe.macros.fat;
-        totalCarbs += adjustedRecipe.macros.carbs;
+        totalCalories += recipe.calories;
+        totalProtein += recipe.macros.protein;
+        totalFat += recipe.macros.fat;
+        totalCarbs += recipe.macros.carbs;
       });
       
       week[day] = {
@@ -368,7 +443,7 @@ export default function MealPlan() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header Section */}
       <section className="relative py-16 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>

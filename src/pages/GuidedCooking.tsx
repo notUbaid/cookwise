@@ -35,7 +35,8 @@ import {
   Zap,
   Target,
   Eye,
-  EyeOff
+  EyeOff,
+  ArrowLeft
 } from 'lucide-react';
 
 interface CookingStep {
@@ -306,35 +307,19 @@ export default function GuidedCooking() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-green-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      {/* Header Section */}
+      <div className="bg-background shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to={`/recipe/${recipe.id}`}>
-                  <X className="h-4 w-4" />
-                </Link>
-              </Button>
-              <div>
-                <h1 className="text-xl font-serif font-bold">{recipe.title}</h1>
-                <p className="text-sm text-muted-foreground">
-                  Step {currentStep + 1} of {totalSteps} • {formatTotalTime(totalCookingTime)}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/">
-                  <Home className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/saved">
-                  <BookOpen className="h-4 w-4" />
-                </Link>
-              </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to={`/recipe/${recipe.id}`}>
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <div>
+              <h1 className="text-xl font-serif font-bold text-foreground">Guided Cooking</h1>
+              <p className="text-sm text-muted-foreground">Follow step-by-step instructions</p>
             </div>
           </div>
         </div>
@@ -461,7 +446,7 @@ export default function GuidedCooking() {
                         
                         {timer !== null && (
                           <div className="flex items-center gap-2">
-                            <span className="text-lg font-mono bg-white px-3 py-1 rounded border">
+                            <span className="text-lg font-mono bg-background px-3 py-1 rounded border border-border">
                               {formatTime(timer)}
                             </span>
                             <Button

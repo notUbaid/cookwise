@@ -261,16 +261,47 @@ export default function ReverseCooking() {
 
         console.log('Calling Spoonacular API:', url);
         
-        const response = await fetch(url);
+        // Add timeout to prevent hanging requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         
-        if (!response.ok) {
-          throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        try {
+          const response = await fetch(url, {
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            if (response.status === 404) {
+              throw new Error('API endpoint not found. Please check your internet connection or try again later.');
+            } else if (response.status === 401) {
+              throw new Error('API key is invalid or expired. Using local recipes instead.');
+            } else if (response.status === 429) {
+              throw new Error('API rate limit exceeded. Using local recipes instead.');
+            } else {
+              throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            }
+          }
+
+          const data: SpoonacularRecipe[] = await response.json();
+          console.log('Spoonacular API response:', data);
+
+          if (data && Array.isArray(data)) {
+            setSuggestedRecipes(data);
+          } else {
+            throw new Error('Invalid response format from API');
+          }
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          if (fetchError instanceof Error) {
+            if (fetchError.name === 'AbortError') {
+              throw new Error('Request timed out. Please try again.');
+            }
+            throw fetchError;
+          }
+          throw new Error('Network error occurred');
         }
-
-        const data: SpoonacularRecipe[] = await response.json();
-        console.log('Spoonacular API response:', data);
-
-        setSuggestedRecipes(data);
       }
 
       // Generate enhanced local recipes
@@ -279,7 +310,17 @@ export default function ReverseCooking() {
 
     } catch (error) {
       console.error('Error fetching recipes:', error);
-      setApiError(error instanceof Error ? error.message : 'Failed to fetch recipes');
+      
+      // Set appropriate error message
+      let errorMessage = 'Failed to fetch recipes';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      setApiError(errorMessage);
+      
+      // Clear suggested recipes on error
+      setSuggestedRecipes([]);
       
       // Fallback to enhanced local recipes
       const enhancedRecipes = generateEnhancedRecipes();
@@ -441,7 +482,7 @@ export default function ReverseCooking() {
   const categories = [...new Set(commonIngredients.map(ingredient => ingredient.category))];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header Section */}
       <section className="relative py-16 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-glow to-accent opacity-90"></div>
@@ -469,200 +510,209 @@ export default function ReverseCooking() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Selection Panel */}
           <div className="lg:col-span-1">
-            <Card className="h-[calc(100vh-200px)] overflow-hidden">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2">
-                  <Utensils className="h-5 w-5" />
-                  What do you have?
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Select your ingredients and leftovers to find perfect recipes
-                </p>
-              </CardHeader>
-              <CardContent className="h-full overflow-y-auto space-y-4 pr-2">
-                {/* API Toggle */}
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <div>
-                    <p className="text-sm font-medium">Use Online Recipes</p>
-                    <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API</p>
+            <div className="sticky top-4">
+              <Card className="max-h-[calc(100vh-200px)] overflow-hidden">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2">
+                    <Utensils className="h-5 w-5" />
+                    What do you have?
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Select your ingredients and leftovers to find perfect recipes
+                  </p>
+                </CardHeader>
+                <CardContent className="overflow-y-auto space-y-4 pr-2" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+                  {/* API Toggle */}
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <div>
+                      <p className="text-sm font-medium">Use Online Recipes</p>
+                      <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API</p>
+                    </div>
+                    <Button
+                      variant={useApi ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setUseApi(!useApi)}
+                    >
+                      {useApi ? "ON" : "OFF"}
+                    </Button>
                   </div>
-                  <Button
-                    variant={useApi ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setUseApi(!useApi)}
-                  >
-                    {useApi ? "ON" : "OFF"}
-                  </Button>
-                </div>
 
-                {/* Tabs for Ingredients and Leftovers */}
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="ingredients" className="flex items-center gap-2">
-                      <ChefHat className="h-4 w-4" />
-                      Ingredients
-                    </TabsTrigger>
-                    <TabsTrigger value="leftovers" className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4" />
-                      Leftovers
-                    </TabsTrigger>
-                  </TabsList>
+                  {/* Tabs for Ingredients and Leftovers */}
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="ingredients" className="flex items-center gap-2">
+                        <ChefHat className="h-4 w-4" />
+                        Ingredients
+                      </TabsTrigger>
+                      <TabsTrigger value="leftovers" className="flex items-center gap-2">
+                        <Lightbulb className="h-4 w-4" />
+                        Leftovers
+                      </TabsTrigger>
+                    </TabsList>
 
-                  <TabsContent value="ingredients" className="space-y-4">
-                    {/* Search */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search ingredients..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-
-                    {/* Selected Ingredients */}
-                    {selectedIngredients.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-medium mb-2">Selected Ingredients:</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedIngredients.map(ingredient => (
-                            <Badge 
-                              key={ingredient} 
-                              variant="secondary"
-                              className="flex items-center gap-1"
-                            >
-                              {ingredient}
-                              <button
-                                onClick={() => handleIngredientRemove(ingredient)}
-                                className="ml-1 hover:text-destructive"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
+                    <TabsContent value="ingredients" className="space-y-4">
+                      {/* Search */}
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search ingredients..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
                       </div>
-                    )}
 
-                    {/* Ingredient Categories */}
-                    <div className="space-y-4">
-                      {categories.map(category => (
-                        <div key={category}>
-                          <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                            {getCategoryIcon(category)}
-                            {category}
-                          </h3>
+                      {/* Selected Ingredients */}
+                      {selectedIngredients.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-medium mb-2">Selected Ingredients:</h3>
                           <div className="flex flex-wrap gap-2">
-                            {getIngredientCategory(category)
-                              .filter(ingredient => 
-                                !searchQuery || 
-                                ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
-                              )
-                              .map(ingredient => (
+                            {selectedIngredients.map(ingredient => (
+                              <Badge 
+                                key={ingredient} 
+                                variant="secondary"
+                                className="flex items-center gap-1"
+                              >
+                                {ingredient}
                                 <button
-                                  key={ingredient.name}
-                                  onClick={() => handleIngredientSelect(ingredient.name)}
-                                  disabled={selectedIngredients.includes(ingredient.name)}
-                                  className={`px-2 py-1 rounded-md text-xs border transition-colors ${
-                                    selectedIngredients.includes(ingredient.name)
-                                      ? 'bg-primary text-primary-foreground'
-                                      : 'bg-background hover:bg-muted'
-                                  }`}
+                                  onClick={() => handleIngredientRemove(ingredient)}
+                                  className="ml-1 hover:text-destructive"
                                 >
-                                  {ingredient.name}
+                                  <X className="h-3 w-3" />
                                 </button>
-                              ))}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </TabsContent>
+                      )}
 
-                  <TabsContent value="leftovers" className="space-y-4">
-                    {/* Search */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search leftovers..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-
-                    {/* Selected Leftovers */}
-                    {selectedLeftovers.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-medium mb-2">Selected Leftovers:</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedLeftovers.map(leftover => (
-                            <Badge 
-                              key={leftover} 
-                              variant="secondary"
-                              className="flex items-center gap-1"
-                            >
-                              {leftover}
-                              <button
-                                onClick={() => handleLeftoverRemove(leftover)}
-                                className="ml-1 hover:text-destructive"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
+                      {/* Ingredient Categories */}
+                      <div className="space-y-4" style={{ fontVariantEmoji: 'none' }}>
+                        {categories.map(category => (
+                          <div key={category}>
+                            <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                              {getCategoryIcon(category)}
+                              {category}
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                              {getIngredientCategory(category)
+                                .filter(ingredient => 
+                                  !searchQuery || 
+                                  ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
+                                )
+                                .map(ingredient => (
+                                  <button
+                                    key={ingredient.name}
+                                    onClick={() => handleIngredientSelect(ingredient.name)}
+                                    disabled={selectedIngredients.includes(ingredient.name)}
+                                    className={`px-2 py-1 rounded-md text-xs border transition-colors ${
+                                      selectedIngredients.includes(ingredient.name)
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-background hover:bg-muted'
+                                    }`}
+                                    style={{ 
+                                      fontFamily: 'system-ui, -apple-system, sans-serif',
+                                      fontVariantEmoji: 'none',
+                                      textEmoji: 'none',
+                                      fontFeatureSettings: '"liga" 0, "dlig" 0',
+                                      textRendering: 'optimizeLegibility'
+                                    }}
+                                  >
+                                    {ingredient.name}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    )}
+                    </TabsContent>
 
-                    {/* Leftover Categories */}
-                    <div className="space-y-4">
-                      {leftoverCategories.map(category => (
-                        <div key={category.name}>
-                          <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                            <span>{category.icon}</span>
-                            {category.name}
-                          </h3>
+                    <TabsContent value="leftovers" className="space-y-4">
+                      {/* Search */}
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search leftovers..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+
+                      {/* Selected Leftovers */}
+                      {selectedLeftovers.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-medium mb-2">Selected Leftovers:</h3>
                           <div className="flex flex-wrap gap-2">
-                            {category.items
-                              .filter(item => 
-                                !searchQuery || 
-                                item.toLowerCase().includes(searchQuery.toLowerCase())
-                              )
-                              .map(item => (
+                            {selectedLeftovers.map(leftover => (
+                              <Badge 
+                                key={leftover} 
+                                variant="secondary"
+                                className="flex items-center gap-1"
+                              >
+                                {leftover}
                                 <button
-                                  key={item}
-                                  onClick={() => handleLeftoverSelect(item)}
-                                  disabled={selectedLeftovers.includes(item)}
-                                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs border transition-colors ${
-                                    selectedLeftovers.includes(item)
-                                      ? 'bg-primary text-primary-foreground'
-                                      : 'bg-background hover:bg-muted'
-                                  }`}
+                                  onClick={() => handleLeftoverRemove(leftover)}
+                                  className="ml-1 hover:text-destructive"
                                 >
-                                  <span>{item}</span>
+                                  <X className="h-3 w-3" />
                                 </button>
-                              ))}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                      )}
 
-                {/* Clear All Button */}
-                {(selectedIngredients.length > 0 || selectedLeftovers.length > 0) && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={clearSelection}
-                    className="w-full"
-                  >
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Clear All
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+                      {/* Leftover Categories */}
+                      <div className="space-y-4">
+                        {leftoverCategories.map(category => (
+                          <div key={category.name}>
+                            <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                              <span>{category.icon}</span>
+                              {category.name}
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                              {category.items
+                                .filter(item => 
+                                  !searchQuery || 
+                                  item.toLowerCase().includes(searchQuery.toLowerCase())
+                                )
+                                .map(item => (
+                                  <button
+                                    key={item}
+                                    onClick={() => handleLeftoverSelect(item)}
+                                    disabled={selectedLeftovers.includes(item)}
+                                    className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs border transition-colors ${
+                                      selectedLeftovers.includes(item)
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-background hover:bg-muted'
+                                    }`}
+                                  >
+                                    <span>{item}</span>
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+
+                  {/* Clear All Button */}
+                  {(selectedIngredients.length > 0 || selectedLeftovers.length > 0) && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={clearSelection}
+                      className="w-full"
+                    >
+                      <RefreshCw className="mr-2 h-4 w-4" />
+                      Clear All
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* Right Column - Recipe Suggestions */}
@@ -712,7 +762,27 @@ export default function ReverseCooking() {
                       <p className="text-muted-foreground mb-4">
                         {apiError}
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <div className="flex gap-2 justify-center">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            setApiError(null);
+                            findRecipes();
+                          }}
+                        >
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Retry
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setUseApi(false)}
+                        >
+                          Use Local Recipes
+                        </Button>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-4">
                         Showing local recipes instead
                       </p>
                     </CardContent>

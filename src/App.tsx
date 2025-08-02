@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
+import ZapierChatbot from "@/components/ZapierChatbot";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Recipe from "./pages/Recipe";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/offline" element={<Offline />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ZapierChatbot chatbotId="cmdtvh3ct000vm7u4t5ae8ikn" />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
