@@ -230,6 +230,7 @@ export default function ReverseCooking() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [useMLApi, setUseMLApi] = useState(false);
+  const [useSpoonacularApi, setUseSpoonacularApi] = useState(false);
   const [activeTab, setActiveTab] = useState('ingredients');
 
   useEffect(() => {
@@ -258,35 +259,7 @@ export default function ReverseCooking() {
     console.log('Setting local recipes:', enhancedRecipes.length);
     setLocalRecipes(enhancedRecipes);
 
-    // Force display some test recipes if no matches found
-    if (enhancedRecipes.length === 0) {
-      console.log('No matches found, setting fallback recipes');
-      const fallbackRecipes = [
-        {
-          id: 'test1',
-          title: 'Test Recipe 1',
-          description: 'A test recipe for debugging',
-          ingredients: ['Rice', 'Vegetables', 'Spices'],
-          image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500',
-          difficulty: 'Easy',
-          time: 20,
-          matchScore: 1,
-          leftoverCompatibility: 0
-        },
-        {
-          id: 'test2',
-          title: 'Test Recipe 2',
-          description: 'Another test recipe',
-          ingredients: ['Chicken', 'Rice', 'Spices'],
-          image: 'https://images.unsplash.com/photo-1563379091339-03246963d2f9?w=500',
-          difficulty: 'Medium',
-          time: 30,
-          matchScore: 1,
-          leftoverCompatibility: 0
-        }
-      ];
-      setLocalRecipes(fallbackRecipes);
-    }
+
 
     // Then try to fetch API recipes
     findRecipes();
@@ -419,101 +392,90 @@ export default function ReverseCooking() {
     
     console.log('Generating recipes for:', allSelected);
     
-    // Filter enhanced reverse recipes based on selected items
-    const filteredReverseRecipes = enhancedReverseRecipes.filter(recipe => {
-      const recipeIngredients = recipe.ingredients.map(ing => ing.toLowerCase());
-      const selectedItems = allSelected.map(item => item.toLowerCase());
-      
-      // More flexible matching - check if any selected item matches any recipe ingredient
-      return selectedItems.some(selectedItem => 
-        recipeIngredients.some(recipeIng => {
-          // Check for exact match, partial match, or word boundaries
-          return recipeIng.includes(selectedItem) || 
-                 selectedItem.includes(recipeIng) ||
-                 recipeIng.split(' ').some(word => word.includes(selectedItem)) ||
-                 selectedItem.split(' ').some(word => word.includes(recipeIng));
-        })
-      );
-    });
+    if (allSelected.length === 0) {
+      console.log('No ingredients selected, returning empty array');
+      return [];
+    }
 
-    console.log('Filtered reverse recipes:', filteredReverseRecipes.length);
-
-    // Check leftover recipes for matches
-    const leftoverMatches = leftoverRecipes.filter(recipe => {
-      const recipeIngredients = recipe.ingredients.map(ing => ing.toLowerCase());
-      const selectedItems = allSelected.map(item => item.toLowerCase());
-      
-      return selectedItems.some(selectedItem => 
-        recipeIngredients.some(recipeIng => {
-          return recipeIng.includes(selectedItem) || 
-                 selectedItem.includes(recipeIng) ||
-                 recipeIng.split(' ').some(word => word.includes(selectedItem)) ||
-                 selectedItem.split(' ').some(word => word.includes(recipeIng));
-        })
-      );
-    }).map(recipe => ({
-      ...recipe,
-      type: 'leftover',
-      matchScore: allSelected.filter(item => 
-        recipe.ingredients.some(ing => 
-          ing.toLowerCase().includes(item.toLowerCase()) ||
-          item.toLowerCase().includes(ing.toLowerCase()) ||
-          ing.toLowerCase().split(' ').some(word => word.includes(item.toLowerCase())) ||
-          item.toLowerCase().split(' ').some(word => word.includes(ing.toLowerCase()))
-        )
-      ).length,
-      leftoverCompatibility: selectedLeftovers.filter(leftover => 
-        recipe.ingredients.some(ing => 
-          ing.toLowerCase().includes(leftover.toLowerCase()) ||
-          leftover.toLowerCase().includes(ing.toLowerCase()) ||
-          ing.toLowerCase().split(' ').some(word => word.includes(leftover.toLowerCase())) ||
-          leftover.toLowerCase().split(' ').some(word => word.includes(ing.toLowerCase()))
-        )
-      ).length
-    }));
-
-    console.log('Leftover matches:', leftoverMatches.length);
-
-    // Also check mock recipes for matches
-    const mockMatches = mockRecipes.filter(recipe => {
-      const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
-      return allSelected.some(selectedItem => {
-        const itemLower = selectedItem.toLowerCase();
-        return recipeIngredients.includes(itemLower) ||
-               recipeIngredients.split(' ').some(word => word.includes(itemLower)) ||
-               itemLower.split(' ').some(word => recipeIngredients.includes(word));
+    // Enhanced matching logic with better debugging
+    const findMatches = (recipes: any[], recipeType: string) => {
+      console.log(`Checking ${recipeType} recipes...`);
+      const matches = recipes.filter(recipe => {
+        const recipeIngredients = recipe.ingredients || [];
+        const recipeIngredientsText = Array.isArray(recipeIngredients) 
+          ? recipeIngredients.join(' ').toLowerCase()
+          : recipeIngredients.toLowerCase();
+        
+        const selectedItems = allSelected.map(item => item.toLowerCase());
+        
+        // Check if any selected item matches any recipe ingredient
+        const hasMatch = selectedItems.some(selectedItem => {
+          // Split selected item into words for better matching
+          const selectedWords = selectedItem.split(/[\s,()]+/).filter(word => word.length > 2);
+          
+          return selectedWords.some(word => {
+            return recipeIngredientsText.includes(word) ||
+                   recipeIngredients.some((ing: string) => 
+                     ing.toLowerCase().includes(word) || 
+                     word.includes(ing.toLowerCase())
+                   );
+          });
+        });
+        
+        if (hasMatch) {
+          console.log(`Match found in ${recipeType}:`, recipe.title || recipe.name);
+        }
+        
+        return hasMatch;
       });
-    }).map(recipe => ({
-      ...recipe,
-      type: 'mock',
-      matchScore: allSelected.filter(item => {
-        const itemLower = item.toLowerCase();
-        const recipeIngredientsLower = recipe.ingredients.join(' ').toLowerCase();
-        return recipeIngredientsLower.includes(itemLower) ||
-               recipeIngredientsLower.split(' ').some(word => word.includes(itemLower)) ||
-               itemLower.split(' ').some(word => recipeIngredientsLower.includes(word));
-      }).length,
-      leftoverCompatibility: selectedLeftovers.filter(leftover => {
-        const leftoverLower = leftover.toLowerCase();
-        const recipeIngredientsLower = recipe.ingredients.join(' ').toLowerCase();
-        return recipeIngredientsLower.includes(leftoverLower) ||
-               recipeIngredientsLower.split(' ').some(word => word.includes(leftoverLower)) ||
-               leftoverLower.split(' ').some(word => recipeIngredientsLower.includes(word));
-      }).length
-    }));
 
-    console.log('Mock matches:', mockMatches.length);
+      console.log(`${recipeType} matches found:`, matches.length);
+      return matches.map(recipe => ({
+        ...recipe,
+        type: recipeType,
+        matchScore: allSelected.filter(item => {
+          const itemLower = item.toLowerCase();
+          const recipeIngredientsText = (recipe.ingredients || []).join(' ').toLowerCase();
+          return recipeIngredientsText.includes(itemLower) ||
+                 itemLower.split(/[\s,()]+/).some(word => 
+                   word.length > 2 && recipeIngredientsText.includes(word)
+                 );
+        }).length,
+        leftoverCompatibility: selectedLeftovers.filter(leftover => {
+          const leftoverLower = leftover.toLowerCase();
+          const recipeIngredientsText = (recipe.ingredients || []).join(' ').toLowerCase();
+          return recipeIngredientsText.includes(leftoverLower) ||
+                 leftoverLower.split(/[\s,()]+/).some(word => 
+                   word.length > 2 && recipeIngredientsText.includes(word)
+                 );
+        }).length
+      }));
+    };
 
-    // Combine and sort by match score
-    const combinedRecipes = [...filteredReverseRecipes, ...leftoverMatches, ...mockMatches];
+    // Check all recipe sources
+    const reverseMatches = findMatches(enhancedReverseRecipes, 'reverse');
+    const leftoverMatches = findMatches(leftoverRecipes, 'leftover');
+    const mockMatches = findMatches(mockRecipes, 'mock');
+
+    // Combine all matches
+    const combinedRecipes = [...reverseMatches, ...leftoverMatches, ...mockMatches];
     combinedRecipes.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
 
     console.log('Total combined recipes:', combinedRecipes.length);
 
-    // If no specific matches, return some enhanced recipes + leftover recipes + random recipes
+    // If no specific matches, return fallback recipes
     if (combinedRecipes.length === 0) {
       console.log('No matches found, returning fallback recipes');
-      const fallbackRecipes = [...enhancedReverseRecipes.slice(0, 3), ...leftoverRecipes.slice(0, 3), ...getRandomRecipes(2)];
+      const fallbackRecipes = [
+        ...enhancedReverseRecipes.slice(0, 3), 
+        ...leftoverRecipes.slice(0, 3), 
+        ...getRandomRecipes(2)
+      ].map(recipe => ({
+        ...recipe,
+        type: 'fallback',
+        matchScore: 1,
+        leftoverCompatibility: 0
+      }));
       console.log('Fallback recipes:', fallbackRecipes.length);
       return fallbackRecipes;
     }
@@ -715,25 +677,50 @@ export default function ReverseCooking() {
                 )}
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
-                  {/* ML API Toggle */}
-                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Zap className="h-4 w-4 text-primary" />
+                  {/* API Toggles */}
+                  <div className="space-y-3">
+                    {/* ML API Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Zap className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">ML-Powered Recommendations</p>
+                          <p className="text-xs text-muted-foreground">Personalized suggestions using quiz data & location</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium">ML-Powered Recommendations</p>
-                        <p className="text-xs text-muted-foreground">Personalized suggestions using quiz data & location</p>
-                      </div>
+                      <Button
+                        variant={useMLApi ? "default" : "outline"}
+                        size="sm"
+                        className={`btn-shimmer ${useMLApi ? 'pulse-glow' : ''}`}
+                        onClick={() => setUseMLApi(!useMLApi)}
+                      >
+                        {useMLApi ? "ON" : "OFF"}
+                      </Button>
                     </div>
-                    <Button
-                      variant={useMLApi ? "default" : "outline"}
-                      size="sm"
-                      className={`btn-shimmer ${useMLApi ? 'pulse-glow' : ''}`}
-                      onClick={() => setUseMLApi(!useMLApi)}
-                    >
-                      {useMLApi ? "ON" : "OFF"}
-                    </Button>
+
+                    {/* Spoonacular API Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl border border-blue-500/10">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-500/10 rounded-lg">
+                          <BookOpen className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Online Recipe Database</p>
+                          <p className="text-xs text-muted-foreground">Get suggestions from Spoonacular API (currently disabled due to quota)</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant={useSpoonacularApi ? "default" : "outline"}
+                        size="sm"
+                        className="btn-shimmer"
+                        onClick={() => setUseSpoonacularApi(!useSpoonacularApi)}
+                        disabled={true}
+                      >
+                        DISABLED
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Tabs for Ingredients and Leftovers */}
@@ -1188,39 +1175,7 @@ export default function ReverseCooking() {
                   </section>
                 )}
 
-                {/* Test Recipes - Always show when ingredients are selected */}
-                {(selectedIngredients.length > 0 || selectedLeftovers.length > 0) && (
-                  <section className="mb-8">
-                    <div className="flex items-center gap-2 mb-6">
-                      <BookOpen className="h-6 w-6 text-primary" />
-                      <h2 className="text-2xl font-serif font-bold">
-                        Test Recipes (Debug)
-                      </h2>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <Card className="hover:shadow-lg transition-shadow">
-                        <CardHeader>
-                          <CardTitle className="text-lg">Test Recipe 1</CardTitle>
-                          <p className="text-sm text-muted-foreground">A test recipe for debugging</p>
-                        </CardHeader>
-                        <CardContent>
-                          <p>This is a test recipe to verify the display is working.</p>
-                          <p>Selected: {selectedIngredients.join(', ')}</p>
-                        </CardContent>
-                      </Card>
-                      <Card className="hover:shadow-lg transition-shadow">
-                        <CardHeader>
-                          <CardTitle className="text-lg">Test Recipe 2</CardTitle>
-                          <p className="text-sm text-muted-foreground">Another test recipe</p>
-                        </CardHeader>
-                        <CardContent>
-                          <p>This is another test recipe.</p>
-                          <p>Selected: {selectedLeftovers.join(', ')}</p>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </section>
-                )}
+
 
                 {/* No Matches */}
                 {suggestedRecipes.length === 0 && localRecipes.length === 0 && (selectedIngredients.length > 0 || selectedLeftovers.length > 0) && !isLoading && (
