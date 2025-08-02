@@ -456,8 +456,15 @@ export default function ReverseCooking() {
   };
 
   const handleIngredientSelect = (ingredientName: string) => {
+    console.log('handleIngredientSelect called with:', ingredientName);
+    console.log('Current selectedIngredients:', selectedIngredients);
+    
     if (!selectedIngredients.includes(ingredientName)) {
-      setSelectedIngredients([...selectedIngredients, ingredientName]);
+      const newIngredients = [...selectedIngredients, ingredientName];
+      console.log('Setting new ingredients:', newIngredients);
+      setSelectedIngredients(newIngredients);
+    } else {
+      console.log('Ingredient already selected:', ingredientName);
     }
   };
 
@@ -466,8 +473,15 @@ export default function ReverseCooking() {
   };
 
   const handleLeftoverSelect = (leftoverName: string) => {
+    console.log('handleLeftoverSelect called with:', leftoverName);
+    console.log('Current selectedLeftovers:', selectedLeftovers);
+    
     if (!selectedLeftovers.includes(leftoverName)) {
-      setSelectedLeftovers([...selectedLeftovers, leftoverName]);
+      const newLeftovers = [...selectedLeftovers, leftoverName];
+      console.log('Setting new leftovers:', newLeftovers);
+      setSelectedLeftovers(newLeftovers);
+    } else {
+      console.log('Leftover already selected:', leftoverName);
     }
   };
 
@@ -536,6 +550,11 @@ export default function ReverseCooking() {
   };
 
   const categories = [...new Set(commonIngredients.map(ingredient => ingredient.category))];
+  
+  // Debug logging
+  console.log('commonIngredients length:', commonIngredients.length);
+  console.log('categories:', categories);
+  console.log('Sample ingredients:', commonIngredients.slice(0, 3));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
@@ -658,7 +677,10 @@ export default function ReverseCooking() {
                                 .map(ingredient => (
                                   <button
                                     key={ingredient.name}
-                                    onClick={() => handleIngredientSelect(ingredient.name)}
+                                    onClick={() => {
+                                      console.log('Ingredient button clicked:', ingredient.name);
+                                      handleIngredientSelect(ingredient.name);
+                                    }}
                                     disabled={selectedIngredients.includes(ingredient.name)}
                                     className={`px-2 py-1 rounded-md text-xs border transition-colors ${
                                       selectedIngredients.includes(ingredient.name)
